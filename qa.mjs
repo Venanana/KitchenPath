@@ -49,12 +49,6 @@ export default async function run(page, ui) {
   await firstToggle.click();
   await page.waitForTimeout(400);
 
-  // --- Skill card expand --------------------------------------------------
-  const skill = page.locator(".skill-card").first();
-  await skill.click();
-  await page.waitForTimeout(400);
-  out.skillExpanded = await skill.getAttribute("aria-expanded");
-
   // --- FAQ accordion ------------------------------------------------------
   const faq = page.locator(".faq-item").first();
   out.faqBefore = await page.locator(".faq-question").first().getAttribute("aria-expanded");

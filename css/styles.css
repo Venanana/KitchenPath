@@ -323,34 +323,6 @@ li { margin-bottom: .35em; }
 .step h3 { margin-bottom: .35em; }
 .step p { color: var(--text-soft); font-size: .92rem; margin-bottom: 0; }
 
-/* ---------- Skills ---------- */
-
-.skill-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;
-}
-.skill-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px;
-  cursor: pointer; box-shadow: var(--shadow);
-  transition: border-color .2s var(--ease), transform .2s var(--ease);
-}
-.skill-card:hover { transform: translateY(-3px); border-color: var(--accent); }
-.skill-card[aria-expanded="true"] { border-color: var(--accent); }
-.skill-icon { font-size: 1.6rem; display: block; margin-bottom: 8px; }
-.skill-card h3 { margin-bottom: .25em; }
-.skill-teaser { color: var(--text-soft); font-size: .94rem; margin-bottom: 0; }
-
-.skill-body {
-  display: grid; grid-template-rows: 0fr;
-  transition: grid-template-rows .32s var(--ease);
-  overflow: hidden;
-}
-.skill-body > * { overflow: hidden; }
-.skill-card[aria-expanded="true"] .skill-body { grid-template-rows: 1fr; }
-.skill-body p:first-child { margin-top: 16px; }
-.skill-body ul { font-size: .93rem; color: var(--text-soft); margin-bottom: 0; }
-.skill-body li { margin-bottom: .4em; }
-
 /* ---------- Recipes ---------- */
 
 .recipe-controls {

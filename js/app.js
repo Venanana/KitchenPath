@@ -496,22 +496,6 @@
      SKILL CARDS — click / keyboard to expand
      ---------------------------------------------------------------------- */
 
-  (function initSkills() {
-    $$(".skill-card").forEach((card) => {
-      const toggle = () => {
-        const open = card.getAttribute("aria-expanded") === "true";
-        card.setAttribute("aria-expanded", String(!open));
-      };
-      card.addEventListener("click", toggle);
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggle();
-        }
-      });
-    });
-  })();
-
   /* ----------------------------------------------------------------------
      RECIPES — render, search, filter
      ---------------------------------------------------------------------- */
