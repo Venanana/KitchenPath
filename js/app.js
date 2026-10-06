@@ -427,13 +427,17 @@
               <li><b>${recipe.steps.length}</b><span>Steps</span></li>
             </ul>
 
-            <p class="recipe-section-label">What you need</p>
-            <ul class="recipe-ingredients">${ingredients}</ul>
-
             <div class="recipe-details">
-              <p class="recipe-section-label">How to make it</p>
-              <ol class="recipe-steps">${steps}</ol>
-              <button type="button" class="recipe-toggle" aria-expanded="false">Show the steps</button>
+              <button type="button" class="recipe-toggle" aria-expanded="false">View recipe</button>
+              <div class="recipe-panel">
+                <div class="recipe-panel-inner">
+                  <p class="recipe-section-label">What you need</p>
+                  <ul class="recipe-ingredients">${ingredients}</ul>
+
+                  <p class="recipe-section-label">How to make it</p>
+                  <ol class="recipe-steps">${steps}</ol>
+                </div>
+              </div>
             </div>
           </div>
         </article>
@@ -463,7 +467,7 @@
       const card = btn.closest(".recipe-card");
       const open = card.classList.toggle("is-open");
       btn.setAttribute("aria-expanded", String(open));
-      btn.textContent = open ? "Hide the steps" : "Show the steps";
+      btn.textContent = open ? "Close recipe" : "View recipe";
     });
 
     // Debounced search.
@@ -513,7 +517,12 @@
     const list = $("#glossaryList");
     if (!list) return;
     list.innerHTML = GLOSSARY.map(
-      (item) => `<div><dt>${esc(item.term)}</dt><dd>${esc(item.def)}</dd></div>`
+      (item) => `
+        <details class="glossary-item">
+          <summary>${esc(item.term)}</summary>
+          <p>${esc(item.def)}</p>
+        </details>
+      `
     ).join("");
   })();
 
