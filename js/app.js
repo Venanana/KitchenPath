@@ -207,6 +207,12 @@
   ];
 
   const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack"];
+  const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const STORAGE_KEYS = {
+    profile: "kitchenpath-profile",
+    saved: "kitchenpath-saved-recipes",
+    plan: "kitchenpath-meal-plan"
+  };
 
   const HERO_MEALS = [
     { name: "Garlic Butter Pasta", desc: "Four ingredients, one pot, and almost impossible to ruin." },
@@ -269,6 +275,152 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[c]));
   }
+
+  function readJSON(key, fallback) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  const recipeById = (id) => RECIPES.find((recipe) => recipe.id === id);
+  let profile = readJSON(STORAGE_KEYS.profile, null);
+  let savedRecipes = new Set(readJSON(STORAGE_KEYS.saved, []));
+  let mealPlan = readJSON(STORAGE_KEYS.plan, {});
+
+  function saveSavedRecipes() {
+    localStorage.setItem(STORAGE_KEYS.saved, JSON.stringify([...savedRecipes]));
+  }
+
+  function saveMealPlan() {
+    localStorage.setItem(STORAGE_KEYS.plan, JSON.stringify(mealPlan));
+  }
+
+  function openAuthPanel() {
+    const panel = $("#authPanel");
+    const toggle = $("#authToggle");
+    if (!panel || !toggle) return;
+    panel.hidden = false;
+    toggle.setAttribute("aria-expanded", "true");
+    $("#authName")?.focus();
+  }
+
+  function isSignedIn() {
+    return Boolean(profile && profile.name);
+  }
+
+  function updateRecipeSaveButtons() {
+    $$(".save-recipe").forEach((button) => {
+      const saved = savedRecipes.has(button.dataset.id);
+      button.textContent = saved ? "Saved" : "Save";
+      button.setAttribute("aria-pressed", String(saved));
+    });
+  }
+
+  function renderSavedRecipes() {
+    const grid = $("#savedGrid");
+    const empty = $("#savedEmpty");
+    if (!grid || !empty) return;
+
+    const recipes = [...savedRecipes].map(recipeById).filter(Boolean);
+    grid.innerHTML = recipes.map((recipe) => `
+      <article class="mini-recipe">
+        <span class="mini-icon" aria-hidden="true">${recipe.icon}</span>
+        <div>
+          <h3>${esc(recipe.name)}</h3>
+          <p>${recipe.time} min · ${esc(recipe.category)}</p>
+        </div>
+        <button type="button" class="text-button remove-saved" data-id="${esc(recipe.id)}">Remove</button>
+      </article>
+    `).join("");
+
+    empty.hidden = isSignedIn() && recipes.length > 0;
+    if (!isSignedIn()) {
+      empty.textContent = "Sign in and save a recipe to see it here.";
+    } else if (!recipes.length) {
+      empty.textContent = "Your saved recipes will appear here.";
+    }
+  }
+
+  function renderPlanner() {
+    const grid = $("#plannerGrid");
+    if (!grid) return;
+
+    const options = RECIPES.map((recipe) =>
+      `<option value="${esc(recipe.id)}">${esc(recipe.name)}</option>`
+    ).join("");
+
+    grid.innerHTML = DAYS.map((day) => `
+      <label class="planner-day">
+        <span>${day}</span>
+        <select data-day="${day}">
+          <option value="">Choose a recipe</option>
+          ${options}
+        </select>
+      </label>
+    `).join("");
+
+    $$("select", grid).forEach((select) => {
+      select.value = mealPlan[select.dataset.day] || "";
+    });
+  }
+
+  /* ----------------------------------------------------------------------
+     ACCOUNT
+     ---------------------------------------------------------------------- */
+
+  (function initAuth() {
+    const toggle = $("#authToggle");
+    const panel = $("#authPanel");
+    const form = $("#authForm");
+    const input = $("#authName");
+    const signOut = $("#signOutButton");
+    if (!toggle || !panel || !form || !input || !signOut) return;
+
+    function syncAuth() {
+      const signedIn = isSignedIn();
+      toggle.textContent = signedIn ? `Hi, ${profile.name}` : "Sign in";
+      input.value = signedIn ? profile.name : "";
+      signOut.hidden = !signedIn;
+      renderSavedRecipes();
+      updateRecipeSaveButtons();
+    }
+
+    toggle.addEventListener("click", () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      if (open) input.focus();
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = input.value.trim();
+      if (!name) return;
+      profile = { name };
+      localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      syncAuth();
+    });
+
+    signOut.addEventListener("click", () => {
+      profile = null;
+      localStorage.removeItem(STORAGE_KEYS.profile);
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      syncAuth();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (panel.hidden || e.target.closest("#authBox")) return;
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+    });
+
+    syncAuth();
+  })();
 
   /* ----------------------------------------------------------------------
      THEME
@@ -428,6 +580,9 @@
             </ul>
 
             <div class="recipe-details">
+              <div class="recipe-actions">
+                <button type="button" class="save-recipe" data-id="${esc(recipe.id)}" aria-pressed="false">Save</button>
+              </div>
               <button type="button" class="recipe-toggle" aria-expanded="false">View recipe</button>
               <div class="recipe-panel">
                 <div class="recipe-panel-inner">
@@ -458,10 +613,31 @@
       $$(".recipe-card", grid).forEach((card, i) => {
         card.style.animationDelay = Math.min(i * 35, 350) + "ms";
       });
+      updateRecipeSaveButtons();
     }
 
-    // Expand / collapse steps via event delegation.
+    // Expand recipes and save favorites via event delegation.
     grid.addEventListener("click", (e) => {
+      const saveBtn = e.target.closest(".save-recipe");
+      if (saveBtn) {
+        if (!isSignedIn()) {
+          openAuthPanel();
+          return;
+        }
+
+        const id = saveBtn.dataset.id;
+        if (savedRecipes.has(id)) {
+          savedRecipes.delete(id);
+        } else {
+          savedRecipes.add(id);
+        }
+
+        saveSavedRecipes();
+        updateRecipeSaveButtons();
+        renderSavedRecipes();
+        return;
+      }
+
       const btn = e.target.closest(".recipe-toggle");
       if (!btn) return;
       const card = btn.closest(".recipe-card");
@@ -481,6 +657,48 @@
     });
 
     render();
+  })();
+
+  /* ----------------------------------------------------------------------
+     SAVED RECIPES
+     ---------------------------------------------------------------------- */
+
+  (function initSavedRecipes() {
+    const grid = $("#savedGrid");
+    if (!grid) return;
+
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".remove-saved");
+      if (!btn) return;
+      savedRecipes.delete(btn.dataset.id);
+      saveSavedRecipes();
+      renderSavedRecipes();
+      updateRecipeSaveButtons();
+    });
+
+    renderSavedRecipes();
+  })();
+
+  /* ----------------------------------------------------------------------
+     MEAL PLANNER
+     ---------------------------------------------------------------------- */
+
+  (function initPlanner() {
+    const grid = $("#plannerGrid");
+    if (!grid) return;
+
+    grid.addEventListener("change", (e) => {
+      const select = e.target.closest("select");
+      if (!select) return;
+      if (select.value) {
+        mealPlan[select.dataset.day] = select.value;
+      } else {
+        delete mealPlan[select.dataset.day];
+      }
+      saveMealPlan();
+    });
+
+    renderPlanner();
   })();
 
   /* ----------------------------------------------------------------------

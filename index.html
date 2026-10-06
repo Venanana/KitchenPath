@@ -27,17 +27,31 @@
 
       <nav class="primary-nav" id="primaryNav" aria-label="Primary">
         <ul>
-          <li><a href="#start">Start Here</a></li>
-          <li><a href="#skills">Skills</a></li>
           <li><a href="#recipes">Recipes</a></li>
-          <li><a href="#glossary">Glossary</a></li>
-          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#saved">Saved</a></li>
+          <li><a href="#planner">Meal Plan</a></li>
+          <li><a href="#start">Basics</a></li>
         </ul>
       </nav>
 
       <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" title="Switch theme">
         <span class="theme-icon" aria-hidden="true">🌙</span>
       </button>
+
+      <div class="auth" id="authBox">
+        <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Sign in</button>
+        <div class="auth-panel" id="authPanel" hidden>
+          <form id="authForm">
+            <label for="authName">Your name</label>
+            <div class="auth-row">
+              <input id="authName" name="authName" type="text" autocomplete="name" placeholder="Alex" />
+              <button class="btn btn-small" type="submit">Save</button>
+            </div>
+          </form>
+          <p class="auth-note">Saves recipes on this device for now.</p>
+          <button class="text-button" id="signOutButton" type="button" hidden>Sign out</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -54,7 +68,7 @@
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#recipes">Find a recipe</a>
-            <a class="btn btn-ghost" href="#start">Start small</a>
+            <a class="btn btn-ghost" href="#planner">Plan the week</a>
           </div>
           <ul class="hero-stats">
             <li><strong>12</strong><span>Simple recipes</span></li>
@@ -224,6 +238,29 @@
       </div>
     </section>
 
+    <!-- SAVED -->
+    <section class="section section-alt" id="saved">
+      <div class="wrap">
+        <header class="section-head">
+          <h2>Saved recipes</h2>
+          <p>Keep the meals you want to cook again.</p>
+        </header>
+        <div class="saved-grid" id="savedGrid"></div>
+        <p class="empty-state" id="savedEmpty">Sign in and save a recipe to see it here.</p>
+      </div>
+    </section>
+
+    <!-- PLANNER -->
+    <section class="section" id="planner">
+      <div class="wrap">
+        <header class="section-head">
+          <h2>Weekly meal plan</h2>
+          <p>Start simple: choose one dinner idea for each day.</p>
+        </header>
+        <div class="planner-grid" id="plannerGrid"></div>
+      </div>
+    </section>
+
     <!-- GLOSSARY -->
     <section class="section section-alt" id="glossary">
       <div class="wrap">
@@ -256,10 +293,10 @@
       <nav aria-label="Footer">
         <ul class="footer-links">
           <li><a href="#start">Start Here</a></li>
-          <li><a href="#skills">Skills</a></li>
           <li><a href="#recipes">Recipes</a></li>
+          <li><a href="#saved">Saved</a></li>
+          <li><a href="#planner">Meal Plan</a></li>
           <li><a href="#glossary">Glossary</a></li>
-          <li><a href="#faq">FAQ</a></li>
         </ul>
       </nav>
       <p class="footer-note">Built for people who have never cooked before.</p>
