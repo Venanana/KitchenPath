@@ -1,0 +1,16 @@
+{
+  "name": "kitchenpath",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cooking lessons and meal planning with KitchenPath",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

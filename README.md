@@ -4,7 +4,26 @@ A beginner-friendly cooking and weekly meal-planning interface built with HTML, 
 
 ## Preview
 
-Run `python -m http.server 8000` from the project directory, then open http://localhost:8000.
+Use Node.js 24. Run `npm ci`, then `npm start` from the project directory and open http://localhost:3000.
+
+Run `npm test` to check page serving, asset types, health checks, and private-file protection.
+
+## Deploy on Render (Web Service)
+
+Connect this repository with the following settings:
+
+| Setting | Value |
+| --- | --- |
+| Runtime | Node |
+| Branch | `main` |
+| Root Directory | Leave blank (repository root) |
+| Build Command | `npm ci` |
+| Start Command | `npm start` |
+| Health Check Path | `/health` |
+
+The Express server binds to `0.0.0.0` and uses Render's `PORT` environment variable. No publish directory is needed for a Web Service. For an existing service, save these settings and deploy the latest commit.
+
+This server hosts the current interactive frontend. Accounts, database storage, and synchronization are still future milestones.
 
 ## Current prototype
 
@@ -22,7 +41,7 @@ Dinner suggestions currently use the sample recipes in the Dinner category. They
 
 1. Cooking lessons and learning progress.
 2. Serving sizes, structured ingredient quantities, and estimated costs.
-3. Express API and PostgreSQL database.
+3. Extend the Express server with API routes and a PostgreSQL database.
 4. Real registration/login, user profiles, and saved data per account.
 5. Administrator tools for recipes, lessons, ingredients, and video references.
 
