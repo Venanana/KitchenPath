@@ -217,12 +217,12 @@
   };
 
   const HERO_MEALS = [
-    { name: "Garlic Butter Pasta", desc: "Four ingredients, one pot, and almost impossible to ruin." },
-    { name: "Soft Scrambled Eggs", desc: "Five minutes, one pan, and the perfect lesson in low heat." },
-    { name: "Cheese Quesadilla", desc: "Crispy, cheesy, and ready in the time it takes to set the table." },
-    { name: "Everything Stir-Fry", desc: "Use up every vegetable in the fridge — nothing gets wasted." },
-    { name: "Garlic Tomato Toast", desc: "Three ingredients that taste like you tried much harder." },
-    { name: "Loaded Rice Bowl", desc: "A formula for dinner you can repeat forever with anything on hand." }
+    { name: "Garlic Butter Pasta", desc: "Pasta with garlic, butter, and parmesan. Ready in about 15 minutes." },
+    { name: "Soft Scrambled Eggs", desc: "Eggs, butter, and a little milk, cooked slowly over low heat." },
+    { name: "Cheese Quesadilla", desc: "Toasted tortillas with melted cheese. Takes about 10 minutes." },
+    { name: "Everything Stir-Fry", desc: "Chopped vegetables tossed with soy sauce and served over rice." },
+    { name: "Garlic Tomato Toast", desc: "Crisp toast topped with garlic, tomato, and olive oil." },
+    { name: "Loaded Rice Bowl", desc: "Rice topped with a fried egg, vegetables, and soy sauce." }
   ];
 
   const GLOSSARY = [
@@ -382,7 +382,7 @@
       const recipe = recipeById(mealPlan[$("select", card).dataset.day]);
       card.classList.toggle("is-planned", Boolean(recipe));
       $(".planner-day-detail", card).textContent = recipe
-        ? `${recipe.time} min · ${recipe.difficulty}` : "Make room for something good.";
+        ? `${recipe.time} min · ${recipe.difficulty}` : "No dinner selected.";
     });
   }
 
