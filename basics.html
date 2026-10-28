@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitchenPath — Cooking Basics</title>
+  <meta name="description" content="Learn cooking basics, discover beginner recipes, plan your weekly dinners, and prepare your grocery list with KitchenPath.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="basics.html">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">🍳</span>
+        <span class="brand-text">Kitchen<strong>Path</strong></span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="burger"></span>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Primary">
+        <ul><li><a href="index.html">Home</a></li>
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="saved.html">Saved</a></li>
+          <li><a href="planner.html">Meal Plan</a></li>
+          <li><a href="groceries.html">Groceries</a></li>
+          <li><a aria-current="page" class="is-active" href="basics.html">Basics</a></li>
+        </ul>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+
+      <div class="auth" id="authBox">
+        <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Your profile</button>
+        <div class="auth-panel" id="authPanel" hidden>
+          <form id="authForm">
+            <label for="authName">Your name</label>
+            <div class="auth-row">
+              <input id="authName" name="authName" type="text" autocomplete="name" placeholder="Alex">
+              <button class="btn btn-small" type="submit">Save</button>
+            </div>
+          </form>
+          <p class="auth-note">A local profile for this browser. Accounts and online sync are coming later.</p>
+          <button class="text-button" id="signOutButton" type="button" hidden>Clear profile name</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="section page-section" id="start">
+      <div class="wrap">
+        <header class="section-head">
+          <h1>Start here: your first 4 steps</h1>
+          <p>Four practical first moves. No fancy setup required.</p>
+        </header>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">01</span>
+            <h3>Stock 10 pantry items</h3>
+            <p>Salt, pepper, olive oil, garlic, onions, rice, pasta, eggs, canned tomatoes, and soy sauce. That's the backbone of dozens of meals.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">02</span>
+            <h3>Buy 5 tools, skip the rest</h3>
+            <p>A chef's knife, a cutting board, a non-stick pan, a saucepan, and a wooden spoon. Everything else is optional at the start.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">03</span>
+            <h3>Learn heat control</h3>
+            <p>Medium heat is your default — not high. Learn what "shimmering oil" and "gentle simmer" look like before you cook a real meal.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">04</span>
+            <h3>Cook one egg three ways</h3>
+            <p>Fried, scrambled, and boiled. It teaches timing, fat, and temperature for pennies per attempt.</p>
+          </li>
+        </ol>
+      <div class="page-related"><a href="glossary.html">Kitchen glossary →</a><a href="faq.html">Beginner FAQ →</a></div></div>
+    </section>
+<section class="section section-alt" id="skills" hidden>
+      <div class="wrap">
+        <header class="section-head">
+          <h2>Core skills, explained simply</h2>
+          <p>Open only the skill you need right now.</p>
+        </header>
+
+        <div class="skill-grid">
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🔪</span>
+            <h3>Knife safety &amp; basic cuts</h3>
+            <p class="skill-teaser">A sharp knife is safer than a dull one.</p>
+            <div class="skill-body">
+              <p>Curl your fingertips into a "claw" so your knuckles guide the blade. Keep the tip of the knife on the board and rock it forward and back rather than chopping straight down.</p>
+              <ul>
+                <li><strong>Rough chop:</strong> uneven chunks — fine for soups and sauces.</li>
+                <li><strong>Slice:</strong> even, flat pieces — good for onions and peppers.</li>
+                <li><strong>Dice:</strong> small cubes — for anything you want to cook fast.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🔥</span>
+            <h3>Heat &amp; pan temperature</h3>
+            <p class="skill-teaser">Most beginner food burns because the pan was too hot.</p>
+            <div class="skill-body">
+              <p>Preheat the pan for 2 minutes before adding oil. Test with a drop of water: it should sizzle and vanish, not sit there or explode. Add food in a single layer — crowding steams instead of browns.</p>
+              <ul>
+                <li><strong>Low:</strong> melting butter, scrambling eggs slowly, simmering sauces.</li>
+                <li><strong>Medium:</strong> almost everything — onions, pancakes, chicken breast.</li>
+                <li><strong>High:</strong> searing steak, boiling water, stir-frying.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🧂</span>
+            <h3>Seasoning &amp; tasting</h3>
+            <p class="skill-teaser">Taste while you cook, not just at the end.</p>
+            <div class="skill-body">
+              <p>Add salt in small amounts throughout cooking rather than all at once at the end. If a dish tastes flat but not salty, it usually needs <em>acid</em> — a squeeze of lemon or a splash of vinegar.</p>
+              <ul>
+                <li>Salt brings out flavor.</li>
+                <li>Acid brightens and balances richness.</li>
+                <li>Fat adds body and carries flavor.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🍚</span>
+            <h3>Cooking grains &amp; pasta</h3>
+            <p class="skill-teaser">Salt the water like the sea.</p>
+            <div class="skill-body">
+              <p>Use far more water than you think you need, and salt it generously. For pasta, save a cup of the starchy cooking water before draining — it turns any sauce silky when you stir it back in.</p>
+              <ul>
+                <li>Pasta: cook 1 minute less than the box says, finish in the sauce.</li>
+                <li>Rice: 1 part rice to 2 parts water, lid on, don't stir, rest 10 minutes.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🐔</span>
+            <h3>Cooking protein safely</h3>
+            <p class="skill-teaser">No thermometer? Use time and visual cues.</p>
+            <div class="skill-body">
+              <p>Chicken is done at 74°C / 165°F — the juices run clear and the meat is white all the way through with no pink. Eggs and fish are far more forgiving than beginners expect.</p>
+              <ul>
+                <li>Pat meat dry before searing — wet meat steams, dry meat browns.</li>
+                <li>Let cooked meat rest 5 minutes so juices stay inside.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="skill-card" tabindex="0" role="button" aria-expanded="false">
+            <span class="skill-icon" aria-hidden="true">🧊</span>
+            <h3>Storing &amp; reheating food</h3>
+            <p class="skill-teaser">Cool leftovers fast, then refrigerate.</p>
+            <div class="skill-body">
+              <p>Don't leave food at room temperature for more than 2 hours. Split big pots into shallow containers so they cool quickly, and refrigerate within 90 minutes.</p>
+              <ul>
+                <li>Most cooked leftovers are good for 3–4 days.</li>
+                <li>Reheat until steaming hot all the way through.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+</main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div>
+        <p class="footer-brand">Kitchen<strong>Path</strong></p>
+        <p class="footer-tag">A beginner's path to cooking real food.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links"><li><a href="index.html">Home</a></li>
+          <li><a href="basics.html">Start Here</a></li>
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="saved.html">Saved</a></li>
+          <li><a href="planner.html">Meal Plan</a></li>
+          <li><a href="groceries.html">Groceries</a></li>
+          <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="faq.html">FAQ</a></li></ul>
+      </nav>
+      <p class="footer-note">Built for people who have never cooked before.</p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="Back to top" hidden>↑</button>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

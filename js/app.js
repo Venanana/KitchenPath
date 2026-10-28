@@ -211,7 +211,9 @@
   const STORAGE_KEYS = {
     profile: "kitchenpath-profile",
     saved: "kitchenpath-saved-recipes",
-    plan: "kitchenpath-meal-plan"
+    plan: "kitchenpath-meal-plan",
+    preferences: "kitchenpath-planner-preferences",
+    groceries: "kitchenpath-grocery-checks"
   };
 
   const HERO_MEALS = [
@@ -288,6 +290,7 @@
   let profile = readJSON(STORAGE_KEYS.profile, null);
   let savedRecipes = new Set(readJSON(STORAGE_KEYS.saved, []));
   let mealPlan = readJSON(STORAGE_KEYS.plan, {});
+  let groceryChecks = new Set(readJSON(STORAGE_KEYS.groceries, []));
 
   function saveSavedRecipes() {
     localStorage.setItem(STORAGE_KEYS.saved, JSON.stringify([...savedRecipes]));
@@ -295,6 +298,8 @@
 
   function saveMealPlan() {
     localStorage.setItem(STORAGE_KEYS.plan, JSON.stringify(mealPlan));
+    renderPlanSummary();
+    renderGroceries();
   }
 
   function openAuthPanel() {
@@ -337,7 +342,7 @@
 
     empty.hidden = isSignedIn() && recipes.length > 0;
     if (!isSignedIn()) {
-      empty.textContent = "Sign in and save a recipe to see it here.";
+      empty.textContent = "Set up your local profile and save a recipe to see it here.";
     } else if (!recipes.length) {
       empty.textContent = "Your saved recipes will appear here.";
     }
@@ -358,12 +363,62 @@
           <option value="">Choose a recipe</option>
           ${options}
         </select>
+        <small class="planner-day-detail"></small>
       </label>
     `).join("");
 
     $$("select", grid).forEach((select) => {
       select.value = mealPlan[select.dataset.day] || "";
     });
+    renderPlanSummary();
+  }
+
+  function renderPlanSummary() {
+    if (!$("#plannerSummary")) return;
+    const planned = DAYS.map((day) => recipeById(mealPlan[day])).filter(Boolean);
+    $("#plannerSummary").textContent = `${planned.length} of 7 dinners planned`;
+    $("#clearPlan").disabled = !planned.length;
+    $$(".planner-day").forEach((card) => {
+      const recipe = recipeById(mealPlan[$("select", card).dataset.day]);
+      card.classList.toggle("is-planned", Boolean(recipe));
+      $(".planner-day-detail", card).textContent = recipe
+        ? `${recipe.time} min · ${recipe.difficulty}` : "Make room for something good.";
+    });
+  }
+
+  function groceryItems() {
+    const items = new Map();
+    DAYS.forEach((day) => {
+      const recipe = recipeById(mealPlan[day]);
+      if (!recipe) return;
+      recipe.ingredients.forEach((ingredient) => {
+        const key = ingredient.trim().toLowerCase();
+        if (!items.has(key)) items.set(key, { key, label: ingredient, days: [] });
+        items.get(key).days.push(day);
+      });
+    });
+    return [...items.values()].sort((a, b) => a.label.localeCompare(b.label));
+  }
+
+  function renderGroceries() {
+    const items = groceryItems();
+    const activeKeys = new Set(items.map((item) => item.key));
+    groceryChecks = new Set([...groceryChecks].filter((key) => activeKeys.has(key)));
+    localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
+    if (!$("#groceryList")) return;
+    $("#groceryList").innerHTML = items.map((item) => `
+      <label class="grocery-item">
+        <input type="checkbox" data-ingredient="${esc(item.key)}" ${groceryChecks.has(item.key) ? "checked" : ""}>
+        <span><strong>${esc(item.label)}</strong>
+          <small>${item.days.length > 1 ? `Needed ${item.days.length} times · ` : ""}${esc(item.days.join(", "))}</small>
+        </span>
+      </label>
+    `).join("");
+    $("#groceryEmpty").hidden = items.length > 0;
+    $("#downloadGroceries").disabled = !items.length;
+    $("#grocerySummary").textContent = items.length
+      ? `${groceryChecks.size} of ${items.length} ingredient entries checked`
+      : "Plan a dinner to get started.";
   }
 
   /* ----------------------------------------------------------------------
@@ -380,7 +435,7 @@
 
     function syncAuth() {
       const signedIn = isSignedIn();
-      toggle.textContent = signedIn ? `Hi, ${profile.name}` : "Sign in";
+      toggle.textContent = signedIn ? `Hi, ${profile.name}` : "Your profile";
       input.value = signedIn ? profile.name : "";
       signOut.hidden = !signedIn;
       renderSavedRecipes();
@@ -472,24 +527,12 @@
       });
     });
 
-    // Highlight the section currently in view.
-    const links = $$("a", nav);
-    const sections = links
-      .map((a) => $(a.getAttribute("href")))
-      .filter(Boolean);
-
-    if ("IntersectionObserver" in window && sections.length) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          links.forEach((l) =>
-            l.classList.toggle("is-active", l.getAttribute("href") === "#" + entry.target.id)
-          );
-        });
-      }, { rootMargin: "-45% 0px -50% 0px" });
-
-      sections.forEach((s) => observer.observe(s));
-    }
+    // Each feature has its own document, so highlight the current page.
+    $$("a", nav).forEach((link) => {
+      const active = link.getAttribute("href") === document.body.dataset.page;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "page");
+    });
   })();
 
   /* ----------------------------------------------------------------------
@@ -680,9 +723,80 @@
         delete mealPlan[select.dataset.day];
       }
       saveMealPlan();
+      $("#plannerStatus").textContent = "Plan updated. Open Groceries to see your checklist.";
+    });
+
+    const preferences = readJSON(STORAGE_KEYS.preferences, {});
+    if ([15, 20, 30, 60].includes(Number(preferences.time))) $("#plannerTime").value = preferences.time;
+    if (["beginner", "all"].includes(preferences.difficulty)) $("#plannerDifficulty").value = preferences.difficulty;
+
+    $("#plannerPreferences").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const time = Number($("#plannerTime").value);
+      const difficulty = $("#plannerDifficulty").value;
+      localStorage.setItem(STORAGE_KEYS.preferences, JSON.stringify({ time, difficulty }));
+      const candidates = RECIPES.filter((recipe) => recipe.category === "Dinner"
+        && recipe.time <= time && (difficulty === "all" || recipe.difficulty !== "Medium"));
+      const emptyDays = DAYS.filter((day) => !recipeById(mealPlan[day]));
+      if (!emptyDays.length) {
+        $("#plannerStatus").textContent = "Your week is full. Remove a dinner to get a new suggestion for that day.";
+        return;
+      }
+      if (!candidates.length) {
+        $("#plannerStatus").textContent = "No dinners match yet. Try allowing more cooking time.";
+        return;
+      }
+      // Shuffle a copy, then cycle through matches to spread variety across the week.
+      for (let i = candidates.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
+      emptyDays.forEach((day, i) => { mealPlan[day] = candidates[i % candidates.length].id; });
+      renderPlanner();
+      saveMealPlan();
+      $("#plannerStatus").textContent = `Added ${emptyDays.length} dinner suggestions. Swap any meal using its dropdown.`;
+    });
+
+    $("#clearPlan").addEventListener("click", () => {
+      mealPlan = {};
+      renderPlanner();
+      saveMealPlan();
+      $("#plannerStatus").textContent = "Week cleared. Choose a dinner or suggest a fresh plan.";
     });
 
     renderPlanner();
+    // Prune checks for ingredients removed from the plan, including on this page.
+    renderGroceries();
+  })();
+
+  (function initGroceries() {
+    const list = $("#groceryList");
+    if (!list) return;
+
+    list.addEventListener("change", (event) => {
+      const input = event.target.closest("input[data-ingredient]");
+      if (!input) return;
+      if (input.checked) groceryChecks.add(input.dataset.ingredient);
+      else groceryChecks.delete(input.dataset.ingredient);
+      localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
+      $("#grocerySummary").textContent = `${groceryChecks.size} of ${groceryItems().length} ingredient entries checked`;
+    });
+
+    $("#downloadGroceries").addEventListener("click", () => {
+      const lines = groceryItems().map((item) =>
+        `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${item.label} — ${item.days.length} recipe use(s): ${item.days.join(", ")}`);
+      const text = ["KitchenPath grocery list", "Amounts are per recipe use; adjust for portions and repeated meals.", "", ...lines].join("\n");
+      const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "kitchenpath-groceries.txt";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    renderGroceries();
   })();
 
   /* ----------------------------------------------------------------------

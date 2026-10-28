@@ -1,5 +1,8 @@
 export default async function run(page, ui) {
   const out = {};
+  const homeUrl = new URL('index.html', page.url()).href;
+  const visit = (file) => page.goto(new URL(file, homeUrl).href);
+  await visit('recipes.html');
 
   // --- Search -------------------------------------------------------------
   await page.fill("#recipeSearch", "garlic");
@@ -50,6 +53,7 @@ export default async function run(page, ui) {
   await page.waitForTimeout(400);
 
   // --- FAQ accordion ------------------------------------------------------
+  await visit('faq.html');
   const faq = page.locator(".faq-item").first();
   out.faqBefore = await page.locator(".faq-question").first().getAttribute("aria-expanded");
   await page.locator(".faq-question").first().click();
@@ -60,6 +64,7 @@ export default async function run(page, ui) {
   };
 
   // --- Hero shuffle -------------------------------------------------------
+  await visit('index.html');
   out.heroBefore = await page.locator("#heroMeal").innerText();
   await page.locator("#shuffleMeal").click();
   await page.waitForTimeout(600);
@@ -80,7 +85,7 @@ export default async function run(page, ui) {
   await page.locator("#navToggle").click();
   await page.waitForTimeout(400);
   out.mobileNavOpen = await page.locator("#primaryNav").evaluate((el) => el.classList.contains("is-open"));
-  out.mobileNavLinkVisible = await page.getByRole("link", { name: "Recipes", exact: true }).isVisible();
+  out.mobileNavLinkVisible = await page.locator('#primaryNav').getByRole("link", { name: "Recipes", exact: true }).isVisible();
 
   // --- Overflow check at mobile width ------------------------------------
   out.horizontalOverflow = await page.evaluate(

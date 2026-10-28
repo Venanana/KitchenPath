@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitchenPath — Beginner FAQ</title>
+  <meta name="description" content="Learn cooking basics, discover beginner recipes, plan your weekly dinners, and prepare your grocery list with KitchenPath.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="faq.html">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">🍳</span>
+        <span class="brand-text">Kitchen<strong>Path</strong></span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="burger"></span>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Primary">
+        <ul><li><a href="index.html">Home</a></li>
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="saved.html">Saved</a></li>
+          <li><a href="planner.html">Meal Plan</a></li>
+          <li><a href="groceries.html">Groceries</a></li>
+          <li><a href="basics.html">Basics</a></li>
+        </ul>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" title="Switch theme">
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+
+      <div class="auth" id="authBox">
+        <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Your profile</button>
+        <div class="auth-panel" id="authPanel" hidden>
+          <form id="authForm">
+            <label for="authName">Your name</label>
+            <div class="auth-row">
+              <input id="authName" name="authName" type="text" autocomplete="name" placeholder="Alex">
+              <button class="btn btn-small" type="submit">Save</button>
+            </div>
+          </form>
+          <p class="auth-note">A local profile for this browser. Accounts and online sync are coming later.</p>
+          <button class="text-button" id="signOutButton" type="button" hidden>Clear profile name</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="section page-section" id="faq">
+      <div class="wrap narrow">
+        <header class="section-head">
+          <h1>Beginner FAQ</h1>
+          <p>The questions everyone is quietly wondering.</p>
+        </header>
+        <div class="faq-list" id="faqList"></div>
+      </div>
+    </section>
+</main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div>
+        <p class="footer-brand">Kitchen<strong>Path</strong></p>
+        <p class="footer-tag">A beginner's path to cooking real food.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links"><li><a href="index.html">Home</a></li>
+          <li><a href="basics.html">Start Here</a></li>
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="saved.html">Saved</a></li>
+          <li><a href="planner.html">Meal Plan</a></li>
+          <li><a href="groceries.html">Groceries</a></li>
+          <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="faq.html">FAQ</a></li></ul>
+      </nav>
+      <p class="footer-note">Built for people who have never cooked before.</p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="Back to top" hidden>↑</button>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
