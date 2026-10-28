@@ -745,6 +745,11 @@ button:disabled { opacity: .45; cursor: default; }
 .recipe-body h3 a, .mini-recipe h3 a, .planner-day h3 a { color: var(--text); }
 .recipe-details { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .recipe-details > .add-to-plan { flex-basis: 100%; text-align: left; padding: 4px 0; }
+.cuisine-filter { display: flex; align-items: center; gap: 10px; font-size: .85rem; }
+.cuisine-filter select { min-height: 44px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font: inherit; }
+.recipe-pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 18px; margin-top: 32px; }
+.recipe-pagination span { color: var(--text-soft); font-size: .9rem; }
+.recipe-controls .chips { flex-basis: 100%; }
 .save-recipe { min-height: 44px; border-radius: 8px; }
 .recipe-facts span { text-transform: none; letter-spacing: normal; }
 .recipe-blurb { line-height: 1.6; }

@@ -12,6 +12,7 @@
      ---------------------------------------------------------------------- */
 
   const RECIPES = [
+    ...(window.KITCHENPATH_FILIPINO_RECIPES || []),
     {
       id: "garlic-butter-pasta",
       name: "Garlic Butter Pasta",
@@ -212,8 +213,9 @@
     "tomato-toast": 1, "veg-stir-fry": 2, "pancakes": 2, "pasta-tomato-sauce": 4,
     "soup": 4, "roast-veg": 2, "quesadilla": 1, "salmon": 1, "rice-bowl": 1
   };
+  (window.KITCHENPATH_FILIPINO_RECIPES || []).forEach((recipe) => { SERVINGS[recipe.id] = recipe.servings; });
 
-  const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack"];
+  const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack", "Dessert"];
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const STORAGE_KEYS = {
     profile: "kitchenpath-profile",
@@ -224,6 +226,10 @@
   };
 
   const HERO_MEALS = [
+    { name: "Chicken Adobo", desc: "Chicken simmered in soy sauce, vinegar, garlic, and bay leaves." },
+    { name: "Chicken Tinola", desc: "A ginger chicken soup with sayote and malunggay." },
+    { name: "Tortang Talong", desc: "Soft roasted eggplant coated in egg and pan-fried." },
+    { name: "Pancit Bihon", desc: "Rice noodles with chicken, cabbage, carrots, and calamansi." },
     { name: "Garlic Butter Pasta", desc: "Pasta with garlic, butter, and parmesan. Ready in about 15 minutes." },
     { name: "Soft Scrambled Eggs", desc: "Eggs, butter, and a little milk, cooked slowly over low heat." },
     { name: "Cheese Quesadilla", desc: "Toasted tortillas with melted cheese. Takes about 10 minutes." },
@@ -296,7 +302,13 @@
   const recipeById = (id) => RECIPES.find((recipe) => recipe.id === id);
   const recipeUrl = (recipe) => `recipe.html?id=${encodeURIComponent(recipe.id)}`;
   function recipePhoto(recipe, eager = false) {
+    if (recipe.photo === null) return `<span class="food-photo" role="img" aria-label="${esc(recipe.name)}; photo unavailable"><span class="photo-fallback" aria-hidden="true">${recipe.icon}</span></span>`;
     return `<span class="food-photo"><span class="photo-fallback" aria-hidden="true">${recipe.icon}</span><img src="images/recipes/${esc(recipe.id)}.jpg" alt="Serving suggestion for ${esc(recipe.name)}" width="960" height="640" loading="${eager ? "eager" : "lazy"}" decoding="async"></span>`;
+  }
+  function photoCaption(recipe) {
+    if (recipe.photo === null) return "Photo not available yet.";
+    const credit = recipe.photo;
+    return `Serving suggestion; toppings and garnishes may vary.${credit ? ` Photo: ${esc(credit.author)} · <a href="${esc(credit.source)}" target="_blank" rel="noopener">${esc(credit.license)}</a>.` : ""}`;
   }
   document.addEventListener("error", (event) => {
     if (event.target.matches?.(".food-photo img")) event.target.hidden = true;
@@ -657,10 +669,11 @@
     detail.innerHTML = `
       ${modal ? "" : '<a class="back-link" href="recipes.html">&larr; All recipes</a>'}
       <div class="recipe-detail-header">
-        <figure>${recipePhoto(recipe, true)}<figcaption>Serving suggestion; toppings and garnishes may vary.</figcaption></figure>
+        <figure>${recipePhoto(recipe, true)}<figcaption>${photoCaption(recipe)}</figcaption></figure>
         <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipe.category)} · ${esc(recipe.difficulty)}</p>
           <${titleTag} id="${prefix}recipeTitle">${esc(recipe.name)}</${titleTag}><p>${esc(recipe.blurb)}</p>
-          <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Cooking time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
+          <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Total time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
+          ${recipe.timeNote ? `<p class="device-note">${esc(recipe.timeNote)}</p>` : ""}
           <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
           <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
         </div>
@@ -740,6 +753,9 @@
 
     let activeCategory = "All";
     let query = "";
+    let currentPage = 1;
+    const pageSize = 12;
+    const cuisine = $("#recipeCuisine");
 
     // Build filter chips.
     CATEGORIES.forEach((cat) => {
@@ -750,6 +766,7 @@
       btn.setAttribute("aria-pressed", String(cat === "All"));
       btn.addEventListener("click", () => {
         activeCategory = cat;
+        currentPage = 1;
         $$(".chip", filterWrap).forEach((c) =>
           c.setAttribute("aria-pressed", String(c.textContent === cat))
         );
@@ -761,9 +778,10 @@
     function matches(recipe) {
       const inCategory = activeCategory === "All" || recipe.category === activeCategory;
       if (!inCategory) return false;
+      if (cuisine?.value === "filipino" && recipe.cuisine !== "Filipino") return false;
       if (!query) return true;
 
-      const haystack = [recipe.name, recipe.category, recipe.blurb, ...recipe.ingredients]
+      const haystack = [recipe.name, recipe.category, recipe.cuisine || "", recipe.blurb, ...(recipe.aliases || []), ...recipe.ingredients]
         .join(" ")
         .toLowerCase();
       return haystack.includes(query);
@@ -777,6 +795,7 @@
             <div class="recipe-meta">
               <span class="tag">${esc(recipe.category)}</span>
               <span class="tag tag-alt">${esc(recipe.difficulty)}</span>
+              ${recipe.cuisine ? `<span class="tag tag-alt">${esc(recipe.cuisine)}</span>` : ""}
             </div>
             <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>
             <p class="recipe-blurb">${esc(recipe.blurb)}</p>
@@ -798,13 +817,18 @@
 
     function render() {
       const results = RECIPES.filter(matches);
-
-      grid.innerHTML = results.map(cardMarkup).join("");
+      const pageCount = Math.max(1, Math.ceil(results.length / pageSize));
+      currentPage = Math.min(currentPage, pageCount);
+      const start = (currentPage - 1) * pageSize;
+      grid.innerHTML = results.slice(start, start + pageSize).map(cardMarkup).join("");
       emptyEl.hidden = results.length > 0;
-      countEl.textContent =
-        results.length === RECIPES.length
-          ? `Showing all ${RECIPES.length} recipes`
-          : `Showing ${results.length} of ${RECIPES.length} recipes`;
+      countEl.textContent = results.length
+        ? `Showing ${start + 1}–${Math.min(start + pageSize, results.length)} of ${results.length} recipes`
+        : "No recipes found";
+      $("#recipePagination").hidden = results.length <= pageSize;
+      $("#recipePageLabel").textContent = `Page ${currentPage} of ${pageCount}`;
+      $("#previousRecipes").disabled = currentPage === 1;
+      $("#nextRecipes").disabled = currentPage === pageCount;
 
       // Stagger the entrance animation slightly.
       $$(".recipe-card", grid).forEach((card, i) => {
@@ -819,9 +843,20 @@
       clearTimeout(timer);
       timer = setTimeout(() => {
         query = searchInput.value.trim().toLowerCase();
+        currentPage = 1;
         render();
       }, 140);
     });
+
+    cuisine?.addEventListener("change", () => { currentPage = 1; render(); });
+    function turnPage(change) {
+      currentPage += change;
+      render();
+      $("#recipes").scrollIntoView({ block: "start", behavior: "instant" });
+      searchInput.focus({ preventScroll: true });
+    }
+    $("#previousRecipes").addEventListener("click", () => turnPage(-1));
+    $("#nextRecipes").addEventListener("click", () => turnPage(1));
 
     render();
   })();
@@ -891,15 +926,18 @@
     });
 
     const preferences = readJSON(STORAGE_KEYS.preferences, {});
-    if ([15, 20, 30, 60].includes(Number(preferences.time))) $("#plannerTime").value = preferences.time;
+    if ([15, 20, 30, 60, 120, 180].includes(Number(preferences.time))) $("#plannerTime").value = preferences.time;
     if (["beginner", "all"].includes(preferences.difficulty)) $("#plannerDifficulty").value = preferences.difficulty;
+    if (["all", "filipino"].includes(preferences.cuisine)) $("#plannerCuisine").value = preferences.cuisine;
 
     $("#plannerPreferences").addEventListener("submit", (event) => {
       event.preventDefault();
       const time = Number($("#plannerTime").value);
       const difficulty = $("#plannerDifficulty").value;
-      localStorage.setItem(STORAGE_KEYS.preferences, JSON.stringify({ time, difficulty }));
+      const cuisine = $("#plannerCuisine").value;
+      localStorage.setItem(STORAGE_KEYS.preferences, JSON.stringify({ time, difficulty, cuisine }));
       const candidates = RECIPES.filter((recipe) => recipe.category === "Dinner"
+        && (cuisine !== "filipino" || recipe.cuisine === "Filipino")
         && recipe.time <= time && (difficulty === "all" || recipe.difficulty !== "Medium"));
       const emptyDays = DAYS.filter((day) => !recipeById(mealPlan[day]));
       if (!emptyDays.length) {

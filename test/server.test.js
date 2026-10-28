@@ -26,7 +26,7 @@ test("serves all website pages and assets without exposing project files", async
     assert.ok((await response.arrayBuffer()).byteLength > 1000, id);
   }
 
-  for (const [asset, type] of [["css/styles.css", /text\/css/], ["js/app.js", /javascript/]]) {
+  for (const [asset, type] of [["css/styles.css", /text\/css/], ["js/app.js", /javascript/], ["js/filipino-recipes.js", /javascript/]]) {
     const response = await fetch(`${base}/${asset}`);
     assert.equal(response.status, 200, asset);
     assert.match(response.headers.get("content-type"), type);

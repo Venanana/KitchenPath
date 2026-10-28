@@ -1,7 +1,39 @@
 {
   "license": "https://www.pexels.com/license/",
   "additionalLicenses": {
-    "scrambled-eggs": "https://creativecommons.org/publicdomain/zero/1.0/"
+    "scrambled-eggs": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "chicken-adobo": "https://creativecommons.org/licenses/by/2.0",
+    "pork-adobo": "https://creativecommons.org/licenses/by-sa/3.0",
+    "chicken-tinola": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sinigang-na-baboy": "https://creativecommons.org/licenses/by-sa/4.0",
+    "nilagang-baboy": "https://creativecommons.org/licenses/by-sa/4.0",
+    "chicken-afritada": "https://creativecommons.org/licenses/by/2.0",
+    "beef-mechado": "https://creativecommons.org/licenses/by-sa/3.0",
+    "pork-menudo": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "bistek-tagalog": "https://creativecommons.org/licenses/by/2.0",
+    "pork-giniling": "https://creativecommons.org/licenses/by-sa/3.0",
+    "filipino-chicken-curry": "https://creativecommons.org/licenses/by-sa/3.0",
+    "ginataang-kalabasa": "https://creativecommons.org/licenses/by-sa/4.0",
+    "ginisang-monggo": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "pinakbet": "https://creativecommons.org/licenses/by-sa/4.0",
+    "tortang-talong": "https://creativecommons.org/licenses/by-sa/4.0",
+    "ginisang-ampalaya": "https://creativecommons.org/licenses/by-sa/4.0",
+    "adobong-kangkong": "https://creativecommons.org/licenses/by/2.0",
+    "chop-suey": "https://creativecommons.org/licenses/by-sa/4.0",
+    "pancit-bihon": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "pancit-canton": "https://creativecommons.org/licenses/by/2.0",
+    "arroz-caldo": "https://creativecommons.org/licenses/by/2.0",
+    "lugaw": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sinangag": "https://creativecommons.org/licenses/by/2.0",
+    "tapsilog": "https://creativecommons.org/licenses/by/2.5",
+    "tocilog": "https://creativecommons.org/licenses/by-sa/4.0",
+    "daing-na-bangus": "https://creativecommons.org/licenses/by-sa/4.0",
+    "lumpiang-shanghai": "https://creativecommons.org/licenses/by/2.0",
+    "turon": "https://creativecommons.org/licenses/by-sa/4.0",
+    "ginataang-mais": "https://creativecommons.org/licenses/by/2.0",
+    "champorado": "https://creativecommons.org/licenses/by/2.0",
+    "biko": "https://creativecommons.org/licenses/by-sa/4.0",
+    "maja-blanca": "https://creativecommons.org/licenses/by-sa/4.0"
   },
   "note": "Illustrative serving suggestions; not photographs of the exact KitchenPath recipes.",
   "photos": {
@@ -16,6 +48,296 @@
     "roast-veg": "https://www.pexels.com/photo/9001211/",
     "quesadilla": "https://www.pexels.com/photo/15662235/",
     "salmon": "https://www.pexels.com/photo/2374946/",
-    "rice-bowl": "https://www.pexels.com/photo/5773967/"
+    "rice-bowl": "https://www.pexels.com/photo/5773967/",
+    "chicken-adobo": "https://commons.wikimedia.org/wiki/File:Chicken_adobo.jpg",
+    "pork-adobo": "https://commons.wikimedia.org/wiki/File:Pork_Adobo.jpg",
+    "chicken-tinola": "https://commons.wikimedia.org/wiki/File:Chicken_tinola_with_green_papaya_and_lemongrass.jpg",
+    "sinigang-na-baboy": "https://commons.wikimedia.org/wiki/File:Pork_Sinigang,_Oct_2025.jpg",
+    "nilagang-baboy": "https://commons.wikimedia.org/wiki/File:Nilagang_baboy_2.jpg",
+    "chicken-afritada": "https://commons.wikimedia.org/wiki/File:Chicken_Afritada_on_white_rice_with_pineapple_tidbits_(Philippines)_2.jpg",
+    "beef-mechado": "https://commons.wikimedia.org/wiki/File:Cooked_mechado.JPG",
+    "pork-menudo": "https://commons.wikimedia.org/wiki/File:Menudo_(Philippines)_02.jpg",
+    "bistek-tagalog": "https://commons.wikimedia.org/wiki/File:Bistek_Tagalog-02.jpg",
+    "pork-giniling": "https://commons.wikimedia.org/wiki/File:Picadillo_and_rice.jpg",
+    "filipino-chicken-curry": "https://commons.wikimedia.org/wiki/File:Philippine_Chicken_curry_(cropped).jpg",
+    "ginataang-kalabasa": "https://commons.wikimedia.org/wiki/File:Ginataang_kalabasa_(Philippines).jpg",
+    "ginisang-monggo": "https://commons.wikimedia.org/wiki/File:Ginisang_munggo_with_fried_bangus.jpg",
+    "pinakbet": "https://commons.wikimedia.org/wiki/File:Pinakbet_ni_Lakay_Jesse.jpg",
+    "tortang-talong": "https://commons.wikimedia.org/wiki/File:Tortang_Talong_2019.jpg",
+    "ginisang-ampalaya": "https://commons.wikimedia.org/wiki/File:Ang_Ginisang_Ampalaya_01.jpg",
+    "adobong-kangkong": "https://commons.wikimedia.org/wiki/File:Adobong_Kangkong_(water_spinach_adobo,_Philippines).jpg",
+    "chop-suey": "https://commons.wikimedia.org/wiki/File:Filipino_Chop_Suey.jpg",
+    "pancit-bihon": "https://commons.wikimedia.org/wiki/File:Pancit_bihon_1.jpg",
+    "pancit-canton": "https://commons.wikimedia.org/wiki/File:Pancit_Ilonggo_Style_-_12110089845.jpg",
+    "arroz-caldo": "https://commons.wikimedia.org/wiki/File:Home_-_Dinner.jpg",
+    "lugaw": "https://commons.wikimedia.org/wiki/File:7619Santa_Rita_Pampanga_Duman_Festival_12.jpg",
+    "sinangag": "https://commons.wikimedia.org/wiki/File:Sinangag_Recipe_(Garlic_Fried_Rice).jpg",
+    "tapsilog": "https://commons.wikimedia.org/wiki/File:Tapsilog.jpg",
+    "tocilog": "https://commons.wikimedia.org/wiki/File:Tocilog.jpg",
+    "daing-na-bangus": "https://commons.wikimedia.org/wiki/File:Daing_na_Bangus,_June_2025.jpg",
+    "lumpiang-shanghai": "https://commons.wikimedia.org/wiki/File:Lumpiang_Shanghai_(Philippines).jpg",
+    "turon": "https://commons.wikimedia.org/wiki/File:Turon_from_Banana_and_Banana_Cue_From_Garden_to_Table.jpg",
+    "ginataang-mais": "https://commons.wikimedia.org/wiki/File:Ginataang_mais_(Sweet_corn_rice_porridge,_Philippines).jpg",
+    "champorado": "https://commons.wikimedia.org/wiki/File:Champorado.jpg",
+    "biko": "https://commons.wikimedia.org/wiki/File:Biko_(sticky_rice_cake).jpg",
+    "maja-blanca": "https://commons.wikimedia.org/wiki/File:Majablanca.jpg"
+  },
+  "attributions": {
+    "chicken-adobo": {
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_adobo.jpg",
+      "title": "File:Chicken adobo.jpg",
+      "author": "dbgg1979 on flickr",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pork-adobo": {
+      "source": "https://commons.wikimedia.org/wiki/File:Pork_Adobo.jpg",
+      "title": "File:Pork Adobo.jpg",
+      "author": "Jacobjbarnes",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "chicken-tinola": {
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_tinola_with_green_papaya_and_lemongrass.jpg",
+      "title": "File:Chicken tinola with green papaya and lemongrass.jpg",
+      "author": "Obsidian Soul",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "sinigang-na-baboy": {
+      "source": "https://commons.wikimedia.org/wiki/File:Pork_Sinigang,_Oct_2025.jpg",
+      "title": "File:Pork Sinigang, Oct 2025.jpg",
+      "author": "Ralff Nestor Nacor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "nilagang-baboy": {
+      "source": "https://commons.wikimedia.org/wiki/File:Nilagang_baboy_2.jpg",
+      "title": "File:Nilagang baboy 2.jpg",
+      "author": "FBenjr123",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "chicken-afritada": {
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_Afritada_on_white_rice_with_pineapple_tidbits_(Philippines)_2.jpg",
+      "title": "File:Chicken Afritada on white rice with pineapple tidbits (Philippines) 2.jpg",
+      "author": "Jo Paragas",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "beef-mechado": {
+      "source": "https://commons.wikimedia.org/wiki/File:Cooked_mechado.JPG",
+      "title": "File:Cooked mechado.JPG",
+      "author": "BrokenSphere",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pork-menudo": {
+      "source": "https://commons.wikimedia.org/wiki/File:Menudo_(Philippines)_02.jpg",
+      "title": "File:Menudo (Philippines) 02.jpg",
+      "author": "Obsidian Soul",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "bistek-tagalog": {
+      "source": "https://commons.wikimedia.org/wiki/File:Bistek_Tagalog-02.jpg",
+      "title": "File:Bistek Tagalog-02.jpg",
+      "author": "Arnold Gatilao",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pork-giniling": {
+      "source": "https://commons.wikimedia.org/wiki/File:Picadillo_and_rice.jpg",
+      "title": "File:Picadillo and rice.jpg",
+      "author": "Cary Bass",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "filipino-chicken-curry": {
+      "source": "https://commons.wikimedia.org/wiki/File:Philippine_Chicken_curry_(cropped).jpg",
+      "title": "File:Philippine Chicken curry (cropped).jpg",
+      "author": "Ramon FVelasquez",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "ginataang-kalabasa": {
+      "source": "https://commons.wikimedia.org/wiki/File:Ginataang_kalabasa_(Philippines).jpg",
+      "title": "File:Ginataang kalabasa (Philippines).jpg",
+      "author": "Obsidian Soul",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "ginisang-monggo": {
+      "source": "https://commons.wikimedia.org/wiki/File:Ginisang_munggo_with_fried_bangus.jpg",
+      "title": "File:Ginisang munggo with fried bangus.jpg",
+      "author": "Pandakekok9",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pinakbet": {
+      "source": "https://commons.wikimedia.org/wiki/File:Pinakbet_ni_Lakay_Jesse.jpg",
+      "title": "File:Pinakbet ni Lakay Jesse.jpg",
+      "author": "Jesse Alegre",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "tortang-talong": {
+      "source": "https://commons.wikimedia.org/wiki/File:Tortang_Talong_2019.jpg",
+      "title": "File:Tortang Talong 2019.jpg",
+      "author": "Cloudapple",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "ginisang-ampalaya": {
+      "source": "https://commons.wikimedia.org/wiki/File:Ang_Ginisang_Ampalaya_01.jpg",
+      "title": "File:Ang Ginisang Ampalaya 01.jpg",
+      "author": "FBenjr123",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "adobong-kangkong": {
+      "source": "https://commons.wikimedia.org/wiki/File:Adobong_Kangkong_(water_spinach_adobo,_Philippines).jpg",
+      "title": "File:Adobong Kangkong (water spinach adobo, Philippines).jpg",
+      "author": "Arnold Gatilao",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "chop-suey": {
+      "source": "https://commons.wikimedia.org/wiki/File:Filipino_Chop_Suey.jpg",
+      "title": "File:Filipino Chop Suey.jpg",
+      "author": "ShmilyDigital",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pancit-bihon": {
+      "source": "https://commons.wikimedia.org/wiki/File:Pancit_bihon_1.jpg",
+      "title": "File:Pancit bihon 1.jpg",
+      "author": "Obsidian Soul",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "pancit-canton": {
+      "source": "https://commons.wikimedia.org/wiki/File:Pancit_Ilonggo_Style_-_12110089845.jpg",
+      "title": "File:Pancit Ilonggo Style - 12110089845.jpg",
+      "author": "pulaw",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "arroz-caldo": {
+      "source": "https://commons.wikimedia.org/wiki/File:Home_-_Dinner.jpg",
+      "title": "File:Home - Dinner.jpg",
+      "author": "Ernesto Andrade",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "lugaw": {
+      "source": "https://commons.wikimedia.org/wiki/File:7619Santa_Rita_Pampanga_Duman_Festival_12.jpg",
+      "title": "File:7619Santa Rita Pampanga Duman Festival 12.jpg",
+      "author": "Judgefloro",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "sinangag": {
+      "source": "https://commons.wikimedia.org/wiki/File:Sinangag_Recipe_(Garlic_Fried_Rice).jpg",
+      "title": "File:Sinangag Recipe (Garlic Fried Rice).jpg",
+      "author": "Joost Nusselder",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "tapsilog": {
+      "source": "https://commons.wikimedia.org/wiki/File:Tapsilog.jpg",
+      "title": "File:Tapsilog.jpg",
+      "author": "Kguirnela at English Wikipedia",
+      "license": "CC BY 2.5",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "tocilog": {
+      "source": "https://commons.wikimedia.org/wiki/File:Tocilog.jpg",
+      "title": "File:Tocilog.jpg",
+      "author": "Maffeth.opiana",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "daing-na-bangus": {
+      "source": "https://commons.wikimedia.org/wiki/File:Daing_na_Bangus,_June_2025.jpg",
+      "title": "File:Daing na Bangus, June 2025.jpg",
+      "author": "Ralff Nestor Nacor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "lumpiang-shanghai": {
+      "source": "https://commons.wikimedia.org/wiki/File:Lumpiang_Shanghai_(Philippines).jpg",
+      "title": "File:Lumpiang Shanghai (Philippines).jpg",
+      "author": "Arnold Gatilao",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "turon": {
+      "source": "https://commons.wikimedia.org/wiki/File:Turon_from_Banana_and_Banana_Cue_From_Garden_to_Table.jpg",
+      "title": "File:Turon from Banana and Banana Cue From Garden to Table.jpg",
+      "author": "Elmer Centeno Guevarra",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "ginataang-mais": {
+      "source": "https://commons.wikimedia.org/wiki/File:Ginataang_mais_(Sweet_corn_rice_porridge,_Philippines).jpg",
+      "title": "File:Ginataang mais (Sweet corn rice porridge, Philippines).jpg",
+      "author": "Debbie Tingzon",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "champorado": {
+      "source": "https://commons.wikimedia.org/wiki/File:Champorado.jpg",
+      "title": "File:Champorado.jpg",
+      "author": "Josh James from Imus, Philippines",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "biko": {
+      "source": "https://commons.wikimedia.org/wiki/File:Biko_(sticky_rice_cake).jpg",
+      "title": "File:Biko (sticky rice cake).jpg",
+      "author": "Herbertkikoy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    },
+    "maja-blanca": {
+      "source": "https://commons.wikimedia.org/wiki/File:Majablanca.jpg",
+      "title": "File:Majablanca.jpg",
+      "author": "kawalingpinoy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "note": "Resized by Wikimedia; illustrative serving suggestion."
+    }
   }
 }
