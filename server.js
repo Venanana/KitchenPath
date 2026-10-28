@@ -9,7 +9,7 @@ app.disable("x-powered-by");
 // Expose only the website pages and assets, not the repository or server files.
 const pages = [
   "index.html", "recipes.html", "saved.html", "planner.html",
-  "groceries.html", "basics.html", "glossary.html", "faq.html"
+  "groceries.html", "basics.html", "glossary.html", "faq.html", "recipe.html"
 ];
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
@@ -17,7 +17,7 @@ app.get(pages.map((page) => `/${page}`), (req, res) => {
   res.sendFile(path.join(__dirname, req.path.slice(1)));
 });
 
-for (const directory of ["css", "js"]) {
+for (const directory of ["css", "js", "images"]) {
   app.use(`/${directory}`, express.static(path.join(__dirname, directory), {
     dotfiles: "deny",
     index: false

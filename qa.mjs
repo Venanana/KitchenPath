@@ -36,21 +36,18 @@ export default async function run(page, ui) {
   await page.waitForTimeout(200);
   out.backToAll = await page.locator(".recipe-card").count();
 
-  // --- Recipe steps accordion --------------------------------------------
-  const firstToggle = page.locator(".recipe-toggle").first();
-  out.stepsBefore = {
-    label: await firstToggle.innerText(),
-    expanded: await firstToggle.getAttribute("aria-expanded")
+  // --- Dedicated recipe page and day picker -------------------------------
+  await page.locator('.recipe-details a').first().click();
+  out.recipeDetail = {
+    name: await page.locator('main h1').innerText(),
+    ingredients: await page.locator('.detail-ingredients li').count(),
+    steps: await page.locator('.method-list li').count(),
+    photoLoaded: await page.locator('.recipe-detail-header img').evaluate(img => img.complete && img.naturalWidth > 0)
   };
-  await firstToggle.click();
-  await page.waitForTimeout(400);
-  out.stepsAfter = {
-    label: await firstToggle.innerText(),
-    expanded: await firstToggle.getAttribute("aria-expanded"),
-    cardOpen: await page.locator(".recipe-card").first().evaluate((el) => el.classList.contains("is-open"))
-  };
-  await firstToggle.click();
-  await page.waitForTimeout(400);
+  await page.locator('main .add-to-plan').click();
+  out.dayPickerOpen = await page.locator('#planDialog').isVisible();
+  await page.locator('#cancelPlan').click();
+  out.dayPickerClosed = !(await page.locator('#planDialog').isVisible());
 
   // --- FAQ accordion ------------------------------------------------------
   await visit('faq.html');

@@ -11,11 +11,19 @@ test("serves all website pages and assets without exposing project files", async
   t.after(() => new Promise((resolve) => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
 
-  for (const page of ["", "index.html", "recipes.html", "saved.html", "planner.html", "groceries.html", "basics.html", "glossary.html", "faq.html"]) {
+  for (const page of ["", "index.html", "recipes.html", "saved.html", "planner.html", "groceries.html", "basics.html", "glossary.html", "faq.html", "recipe.html?id=garlic-butter-pasta"]) {
     const response = await fetch(`${base}/${page}`);
     assert.equal(response.status, 200, page || "/");
     assert.match(response.headers.get("content-type"), /text\/html/);
     assert.match(await response.text(), /KitchenPath/);
+  }
+
+  const photos = require("../images/credits.json").photos;
+  for (const id of Object.keys(photos)) {
+    const response = await fetch(`${base}/images/recipes/${id}.jpg`);
+    assert.equal(response.status, 200, id);
+    assert.match(response.headers.get("content-type"), /image\/jpeg/);
+    assert.ok((await response.arrayBuffer()).byteLength > 1000, id);
   }
 
   for (const [asset, type] of [["css/styles.css", /text\/css/], ["js/app.js", /javascript/]]) {

@@ -19,7 +19,7 @@
       category: "Dinner",
       time: 15,
       difficulty: "Very easy",
-      blurb: "Four ingredients, one pot, and almost impossible to ruin.",
+      blurb: "Pasta tossed with garlic butter and parmesan.",
       ingredients: ["200g pasta (any shape)", "3 cloves garlic", "40g butter", "Handful of parmesan"],
       steps: [
         "Boil salted water and cook the pasta 1 minute less than the box says.",
@@ -35,7 +35,7 @@
       category: "Breakfast",
       time: 5,
       difficulty: "Very easy",
-      blurb: "The first thing everyone should learn. Low heat is the whole secret.",
+      blurb: "Soft eggs cooked slowly with butter and a splash of milk.",
       ingredients: ["3 eggs", "1 tbsp butter", "1 tbsp milk", "Salt"],
       steps: [
         "Whisk eggs, milk, and a pinch of salt until completely smooth.",
@@ -51,7 +51,7 @@
       category: "Dinner",
       time: 35,
       difficulty: "Easy",
-      blurb: "Everything goes in one pan. Great for people who hate doing dishes.",
+      blurb: "Chicken thighs and rice cooked together in one pan.",
       ingredients: ["2 chicken thighs", "1 cup rice", "2 cups stock or water", "1 onion"],
       steps: [
         "Season chicken with salt and pepper, then sear in a hot pan 4 minutes per side. Set aside.",
@@ -67,7 +67,7 @@
       category: "Snack",
       time: 8,
       difficulty: "Very easy",
-      blurb: "A 3-ingredient lunch that tastes like you tried harder than you did.",
+      blurb: "Crisp toast with fresh tomato, garlic, and olive oil.",
       ingredients: ["2 slices bread", "1 ripe tomato", "1 clove garlic", "Olive oil"],
       steps: [
         "Toast the bread until crisp.",
@@ -83,7 +83,7 @@
       category: "Dinner",
       time: 20,
       difficulty: "Easy",
-      blurb: "The best way to use up whatever vegetables are in the fridge.",
+      blurb: "A quick vegetable stir-fry with soy sauce, served over rice.",
       ingredients: ["Any vegetables you have", "2 tbsp soy sauce", "1 tsp sugar", "Rice to serve"],
       steps: [
         "Chop everything into similar-sized pieces so it cooks evenly.",
@@ -99,7 +99,7 @@
       category: "Breakfast",
       time: 20,
       difficulty: "Easy",
-      blurb: "Five pantry ingredients and a good lesson in not over-mixing.",
+      blurb: "Simple pancakes made with flour, milk, eggs, and baking powder.",
       ingredients: ["1 cup flour", "1 cup milk", "1 egg", "1 tbsp sugar", "1 tsp baking powder"],
       steps: [
         "Whisk the dry ingredients in one bowl and the wet in another.",
@@ -115,7 +115,7 @@
       category: "Dinner",
       time: 25,
       difficulty: "Easy",
-      blurb: "Better than jarred, and it freezes beautifully for later.",
+      blurb: "A tomato, onion, and garlic sauce to serve with your choice of pasta.",
       ingredients: ["1 can chopped tomatoes", "1 onion", "2 cloves garlic", "Olive oil"],
       steps: [
         "Cook diced onion in olive oil over medium heat for 5 minutes until soft.",
@@ -131,7 +131,7 @@
       category: "Lunch",
       time: 30,
       difficulty: "Easy",
-      blurb: "Forgiving by design — you basically cannot overcook soup.",
+      blurb: "Vegetables simmered in stock, served chunky or blended smooth.",
       ingredients: ["Any vegetables", "1 onion", "4 cups stock", "Olive oil"],
       steps: [
         "Soften diced onion in oil over medium heat, 5 minutes.",
@@ -147,7 +147,7 @@
       category: "Side",
       time: 35,
       difficulty: "Very easy",
-      blurb: "The technique that makes vegetables taste good to people who hate vegetables.",
+      blurb: "Chopped vegetables roasted with olive oil, salt, and pepper.",
       ingredients: ["Any vegetables", "2 tbsp olive oil", "Salt", "Pepper"],
       steps: [
         "Heat the oven to 200°C / 400°F.",
@@ -163,7 +163,7 @@
       category: "Snack",
       time: 10,
       difficulty: "Very easy",
-      blurb: "Crispy outside, melted inside, and ready before you finish setting the table.",
+      blurb: "Toasted tortillas filled with melted cheese.",
       ingredients: ["2 tortillas", "1 cup grated cheese", "1 tbsp butter", "Optional: beans or onion"],
       steps: [
         "Sprinkle cheese over one tortilla and top with the second.",
@@ -179,7 +179,7 @@
       category: "Dinner",
       time: 15,
       difficulty: "Medium",
-      blurb: "Looks impressive, takes minutes, and teaches you how to cook fish.",
+      blurb: "Pan-seared salmon finished with a squeeze of lemon.",
       ingredients: ["1 salmon fillet", "1 tbsp oil", "Half a lemon", "Salt"],
       steps: [
         "Pat the salmon completely dry with paper towel — this is what makes the skin crisp.",
@@ -195,7 +195,7 @@
       category: "Lunch",
       time: 15,
       difficulty: "Very easy",
-      blurb: "A formula, not a recipe. Learn it once and never wonder what to eat again.",
+      blurb: "A bowl of rice topped with an egg, vegetables, and soy sauce.",
       ingredients: ["1 cup cooked rice", "1 egg", "Soy sauce", "Any leftover vegetables"],
       steps: [
         "Warm the rice in a bowl.",
@@ -205,6 +205,13 @@
       ]
     }
   ];
+
+  // Approximate yield of the ingredient amounts shown, before any portion adjustments.
+  const SERVINGS = {
+    "garlic-butter-pasta": 2, "scrambled-eggs": 1, "one-pan-chicken-rice": 2,
+    "tomato-toast": 1, "veg-stir-fry": 2, "pancakes": 2, "pasta-tomato-sauce": 4,
+    "soup": 4, "roast-veg": 2, "quesadilla": 1, "salmon": 1, "rice-bowl": 1
+  };
 
   const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack"];
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -287,6 +294,14 @@
   }
 
   const recipeById = (id) => RECIPES.find((recipe) => recipe.id === id);
+  const recipeUrl = (recipe) => `recipe.html?id=${encodeURIComponent(recipe.id)}`;
+  function recipePhoto(recipe, eager = false) {
+    return `<span class="food-photo"><span class="photo-fallback" aria-hidden="true">${recipe.icon}</span><img src="images/recipes/${esc(recipe.id)}.jpg" alt="Serving suggestion for ${esc(recipe.name)}" width="960" height="640" loading="${eager ? "eager" : "lazy"}" decoding="async"></span>`;
+  }
+  document.addEventListener("error", (event) => {
+    if (event.target.matches?.(".food-photo img")) event.target.hidden = true;
+  }, true);
+
   let profile = readJSON(STORAGE_KEYS.profile, null);
   let savedRecipes = new Set(readJSON(STORAGE_KEYS.saved, []));
   let mealPlan = readJSON(STORAGE_KEYS.plan, {});
@@ -319,6 +334,8 @@
     $$(".save-recipe").forEach((button) => {
       const saved = savedRecipes.has(button.dataset.id);
       button.textContent = saved ? "Saved" : "Save";
+      const recipe = recipeById(button.dataset.id);
+      button.setAttribute("aria-label", `${saved ? "Unsave" : "Save"} ${recipe?.name || "recipe"}`);
       button.setAttribute("aria-pressed", String(saved));
     });
   }
@@ -331,21 +348,17 @@
     const recipes = [...savedRecipes].map(recipeById).filter(Boolean);
     grid.innerHTML = recipes.map((recipe) => `
       <article class="mini-recipe">
-        <span class="mini-icon" aria-hidden="true">${recipe.icon}</span>
+        <a class="saved-photo" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
         <div>
-          <h3>${esc(recipe.name)}</h3>
+          <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>
           <p>${recipe.time} min · ${esc(recipe.category)}</p>
+          <button type="button" class="text-button add-to-plan" data-id="${esc(recipe.id)}">Add to meal plan</button>
         </div>
-        <button type="button" class="text-button remove-saved" data-id="${esc(recipe.id)}">Remove</button>
+        <button type="button" class="text-button remove-saved" data-id="${esc(recipe.id)}" aria-label="Remove ${esc(recipe.name)} from saved recipes">Remove</button>
       </article>
     `).join("");
 
-    empty.hidden = isSignedIn() && recipes.length > 0;
-    if (!isSignedIn()) {
-      empty.textContent = "Set up your local profile and save a recipe to see it here.";
-    } else if (!recipes.length) {
-      empty.textContent = "Your saved recipes will appear here.";
-    }
+    empty.hidden = recipes.length > 0;
   }
 
   function renderPlanner() {
@@ -356,16 +369,26 @@
       `<option value="${esc(recipe.id)}">${esc(recipe.name)}</option>`
     ).join("");
 
-    grid.innerHTML = DAYS.map((day) => `
-      <label class="planner-day">
-        <span>${day}</span>
-        <select data-day="${day}">
-          <option value="">Choose a recipe</option>
-          ${options}
-        </select>
+    grid.innerHTML = DAYS.map((day) => {
+      const recipe = recipeById(mealPlan[day]);
+      return `<article class="planner-day ${recipe ? "is-planned" : ""}">
+        <h2>${day}</h2>
+        ${recipe ? `<a class="planner-photo" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
+          <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>`
+          : '<div class="planner-placeholder">No dinner selected</div>'}
         <small class="planner-day-detail"></small>
-      </label>
-    `).join("");
+        <label class="planner-choice" ${recipe ? "hidden" : ""}>
+          <span>${recipe ? "Change dinner" : "Choose dinner"} for ${day}</span>
+          <select data-day="${day}" id="dinner-${day}">
+            <option value="">Choose a recipe</option>${options}
+          </select>
+        </label>
+        ${recipe ? `<div class="planner-day-actions">
+          <button type="button" class="text-button change-dinner" data-day="${day}" aria-controls="dinner-${day}" aria-expanded="false" aria-label="Change ${day}'s dinner">Change</button>
+          <button type="button" class="text-button remove-dinner" data-day="${day}" aria-label="Remove ${day}'s dinner">Remove</button>
+        </div>` : ""}
+      </article>`;
+    }).join("");
 
     $$("select", grid).forEach((select) => {
       select.value = mealPlan[select.dataset.day] || "";
@@ -435,7 +458,7 @@
 
     function syncAuth() {
       const signedIn = isSignedIn();
-      toggle.textContent = signedIn ? `Hi, ${profile.name}` : "Your profile";
+      toggle.textContent = signedIn ? profile.name : "Profile";
       input.value = signedIn ? profile.name : "";
       signOut.hidden = !signedIn;
       renderSavedRecipes();
@@ -452,9 +475,9 @@
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const name = input.value.trim();
-      if (!name) return;
-      profile = { name };
-      localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
+      profile = name ? { name } : null;
+      if (profile) localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
+      else localStorage.removeItem(STORAGE_KEYS.profile);
       panel.hidden = true;
       toggle.setAttribute("aria-expanded", "false");
       syncAuth();
@@ -472,6 +495,14 @@
       if (panel.hidden || e.target.closest("#authBox")) return;
       panel.hidden = true;
       toggle.setAttribute("aria-expanded", "false");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) {
+        panel.hidden = true;
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
     });
 
     syncAuth();
@@ -529,10 +560,127 @@
 
     // Each feature has its own document, so highlight the current page.
     $$("a", nav).forEach((link) => {
-      const active = link.getAttribute("href") === document.body.dataset.page;
+      const page = document.body.dataset.page === "recipe.html" ? "recipes.html" : document.body.dataset.page;
+      const active = link.getAttribute("href") === page;
       link.classList.toggle("is-active", active);
       if (active) link.setAttribute("aria-current", "page");
     });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && nav.classList.contains("is-open")) {
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+    });
+  })();
+
+  /* Shared recipe actions, available from cards, saved recipes, and details. */
+  const notice = document.createElement("p");
+  notice.className = "app-notice";
+  notice.setAttribute("role", "status");
+  notice.hidden = true;
+  document.body.appendChild(notice);
+  let noticeTimer;
+  function announce(message, href, label) {
+    clearTimeout(noticeTimer);
+    notice.innerHTML = `${esc(message)}${href ? ` <a href="${esc(href)}">${esc(label)}</a>` : ""}`;
+    notice.hidden = false;
+    noticeTimer = setTimeout(() => { notice.hidden = true; }, 10000);
+  }
+
+  (function initRecipeActions() {
+    const dialog = document.createElement("dialog");
+    dialog.id = "planDialog";
+    dialog.className = "plan-dialog";
+    dialog.setAttribute("aria-labelledby", "planDialogTitle");
+    dialog.innerHTML = `<form id="addPlanForm">
+      <h2 id="planDialogTitle">Add to meal plan</h2>
+      <p id="planRecipeName"></p>
+      <label for="planDay">Choose a day</label>
+      <select id="planDay" name="day">${DAYS.map((day) => `<option value="${day}">${day}</option>`).join("")}</select>
+      <p id="planReplacement" role="status"></p>
+      <div class="dialog-actions"><button type="button" class="btn btn-ghost" id="cancelPlan">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="confirmPlan">Add dinner</button></div>
+    </form>`;
+    document.body.appendChild(dialog);
+    let selectedRecipe;
+    let opener;
+    function syncReplacement() {
+      const current = recipeById(mealPlan[$("#planDay").value]);
+      $("#planReplacement").textContent = current
+        ? `Currently planned: ${current.name}. ${current.id === selectedRecipe.id ? "This meal is already selected." : "Adding this recipe will replace it."}`
+        : "This day has no dinner planned.";
+      $("#confirmPlan").textContent = current && current.id !== selectedRecipe.id ? "Replace dinner" : "Add dinner";
+      $("#confirmPlan").disabled = current?.id === selectedRecipe.id;
+    }
+    $("#planDay").addEventListener("change", syncReplacement);
+    $("#cancelPlan").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => opener?.focus());
+    $("#addPlanForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const day = $("#planDay").value;
+      if (!selectedRecipe || !DAYS.includes(day)) return;
+      mealPlan[day] = selectedRecipe.id;
+      saveMealPlan();
+      renderPlanner();
+      dialog.close();
+      announce(`${selectedRecipe.name} added for ${day}.`, "planner.html", "View meal plan");
+    });
+    document.addEventListener("click", (event) => {
+      const save = event.target.closest(".save-recipe");
+      if (save && recipeById(save.dataset.id)) {
+        const id = save.dataset.id;
+        if (savedRecipes.has(id)) savedRecipes.delete(id);
+        else savedRecipes.add(id);
+        saveSavedRecipes();
+        updateRecipeSaveButtons();
+        renderSavedRecipes();
+        announce(savedRecipes.has(id) ? "Recipe saved in this browser." : "Recipe removed from saved.", "saved.html", "View saved recipes");
+      }
+      const add = event.target.closest(".add-to-plan");
+      if (!add) return;
+      selectedRecipe = recipeById(add.dataset.id);
+      if (!selectedRecipe) return;
+      opener = add;
+      mealPlan = readJSON(STORAGE_KEYS.plan, {});
+      $("#planRecipeName").textContent = selectedRecipe.name;
+      $("#planDay").value = DAYS.find((day) => !recipeById(mealPlan[day])) || DAYS[0];
+      syncReplacement();
+      dialog.showModal();
+    });
+  })();
+
+  (function initRecipeDetail() {
+    const detail = $("#recipeDetail");
+    if (!detail) return;
+    const recipe = recipeById(new URLSearchParams(window.location.search).get("id"));
+    if (!recipe) {
+      document.title = "Recipe not found — KitchenPath";
+      detail.innerHTML = '<h1>Recipe not found</h1><p>This link does not match a recipe in our library.</p><a class="btn btn-primary" href="recipes.html">Browse recipes</a>';
+      return;
+    }
+    document.title = `${recipe.name} — KitchenPath`;
+    detail.innerHTML = `
+      <a class="back-link" href="recipes.html">&larr; All recipes</a>
+      <div class="recipe-detail-header">
+        <figure>${recipePhoto(recipe, true)}<figcaption>Serving suggestion; toppings and garnishes may vary.</figcaption></figure>
+        <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipe.category)} · ${esc(recipe.difficulty)}</p>
+          <h1>${esc(recipe.name)}</h1><p>${esc(recipe.blurb)}</p>
+          <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Cooking time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
+          <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
+          <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
+        </div>
+      </div>
+      <div class="recipe-cooking-layout">
+        <section class="ingredient-section" aria-labelledby="ingredientHeading"><h2 id="ingredientHeading">Ingredients</h2>
+          <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}. Check off ingredients as you prepare them.</p>
+          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label></li>`).join("")}</ul>
+        </section>
+        <section aria-labelledby="methodHeading"><h2 id="methodHeading">Instructions</h2>
+          <ol class="method-list">${recipe.steps.map((step) => `<li>${esc(step)}</li>`).join("")}</ol>
+        </section>
+      </div>`;
+    updateRecipeSaveButtons();
   })();
 
   /* ----------------------------------------------------------------------
@@ -584,42 +732,26 @@
     }
 
     function cardMarkup(recipe) {
-      const ingredients = recipe.ingredients
-        .map((i) => `<li>${esc(i)}</li>`)
-        .join("");
-      const steps = recipe.steps.map((s) => `<li><span>${esc(s)}</span></li>`).join("");
-
       return `
         <article class="recipe-card" data-id="${esc(recipe.id)}">
-          <div class="recipe-thumb" aria-hidden="true">${recipe.icon}</div>
+          <a class="recipe-thumb" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
           <div class="recipe-body">
             <div class="recipe-meta">
               <span class="tag">${esc(recipe.category)}</span>
               <span class="tag tag-alt">${esc(recipe.difficulty)}</span>
             </div>
-            <h3>${esc(recipe.name)}</h3>
+            <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>
             <p class="recipe-blurb">${esc(recipe.blurb)}</p>
 
             <ul class="recipe-facts">
               <li><b>${recipe.time} min</b><span>Time</span></li>
-              <li><b>${recipe.ingredients.length}</b><span>Ingredients</span></li>
-              <li><b>${recipe.steps.length}</b><span>Steps</span></li>
+              <li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li>
             </ul>
 
             <div class="recipe-details">
-              <div class="recipe-actions">
-                <button type="button" class="save-recipe" data-id="${esc(recipe.id)}" aria-pressed="false">Save</button>
-              </div>
-              <button type="button" class="recipe-toggle" aria-expanded="false">View recipe</button>
-              <div class="recipe-panel">
-                <div class="recipe-panel-inner">
-                  <p class="recipe-section-label">What you need</p>
-                  <ul class="recipe-ingredients">${ingredients}</ul>
-
-                  <p class="recipe-section-label">How to make it</p>
-                  <ol class="recipe-steps">${steps}</ol>
-                </div>
-              </div>
+              <a class="btn btn-ghost btn-small" href="${recipeUrl(recipe)}">View recipe</a>
+              <button type="button" class="save-recipe" data-id="${esc(recipe.id)}" aria-label="Save ${esc(recipe.name)}" aria-pressed="false">Save</button>
+              <button type="button" class="text-button add-to-plan" data-id="${esc(recipe.id)}">Add to meal plan</button>
             </div>
           </div>
         </article>
@@ -642,36 +774,6 @@
       });
       updateRecipeSaveButtons();
     }
-
-    // Expand recipes and save favorites via event delegation.
-    grid.addEventListener("click", (e) => {
-      const saveBtn = e.target.closest(".save-recipe");
-      if (saveBtn) {
-        if (!isSignedIn()) {
-          openAuthPanel();
-          return;
-        }
-
-        const id = saveBtn.dataset.id;
-        if (savedRecipes.has(id)) {
-          savedRecipes.delete(id);
-        } else {
-          savedRecipes.add(id);
-        }
-
-        saveSavedRecipes();
-        updateRecipeSaveButtons();
-        renderSavedRecipes();
-        return;
-      }
-
-      const btn = e.target.closest(".recipe-toggle");
-      if (!btn) return;
-      const card = btn.closest(".recipe-card");
-      const open = card.classList.toggle("is-open");
-      btn.setAttribute("aria-expanded", String(open));
-      btn.textContent = open ? "Close recipe" : "View recipe";
-    });
 
     // Debounced search.
     let timer;
@@ -701,6 +803,8 @@
       saveSavedRecipes();
       renderSavedRecipes();
       updateRecipeSaveButtons();
+      announce("Recipe removed from saved.");
+      ($(".remove-saved", grid) || $("#savedEmpty a"))?.focus();
     });
 
     renderSavedRecipes();
@@ -722,8 +826,30 @@
       } else {
         delete mealPlan[select.dataset.day];
       }
+      const day = select.dataset.day;
       saveMealPlan();
+      renderPlanner();
+      const focusTarget = $(`.change-dinner[data-day="${day}"]`) || $(`#dinner-${day}`);
+      focusTarget?.focus();
       $("#plannerStatus").textContent = "Plan updated. Open Groceries to see your checklist.";
+    });
+
+    grid.addEventListener("click", (event) => {
+      const change = event.target.closest(".change-dinner");
+      if (change) {
+        const choice = change.closest(".planner-day").querySelector(".planner-choice");
+        choice.hidden = !choice.hidden;
+        change.setAttribute("aria-expanded", String(!choice.hidden));
+        if (!choice.hidden) $("select", choice).focus();
+      }
+      const remove = event.target.closest(".remove-dinner");
+      if (!remove) return;
+      const day = remove.dataset.day;
+      delete mealPlan[day];
+      saveMealPlan();
+      renderPlanner();
+      $(`#dinner-${day}`).focus();
+      $("#plannerStatus").textContent = `${day}'s dinner removed. Your grocery list has been updated.`;
     });
 
     const preferences = readJSON(STORAGE_KEYS.preferences, {});

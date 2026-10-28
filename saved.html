@@ -40,17 +40,17 @@
       </button>
 
       <div class="auth" id="authBox">
-        <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Your profile</button>
+        <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Profile</button>
         <div class="auth-panel" id="authPanel" hidden>
           <form id="authForm">
-            <label for="authName">Your name</label>
+            <p class="profile-heading">On this device</p><label for="authName">Name (optional)</label>
             <div class="auth-row">
-              <input id="authName" name="authName" type="text" autocomplete="name" placeholder="Alex">
+              <input id="authName" name="authName" type="text" autocomplete="name" maxlength="40" placeholder="Your name">
               <button class="btn btn-small" type="submit">Save</button>
             </div>
           </form>
-          <p class="auth-note">A local profile for this browser. Accounts and online sync are coming later.</p>
-          <button class="text-button" id="signOutButton" type="button" hidden>Clear profile name</button>
+          <p class="auth-note">Recipes and plans save in this browser. Adding your name is optional; nothing syncs to other devices.</p>
+          <button class="text-button" id="signOutButton" type="button" hidden>Remove name</button>
         </div>
       </div>
     </div>
@@ -61,10 +61,14 @@
       <div class="wrap">
         <header class="section-head">
           <h1>Saved recipes</h1>
-          <p>Keep the meals you want to cook again.</p>
+          <p>Keep the meals you want to cook again. Saved in this browser, with no account needed.</p>
         </header>
         <div class="saved-grid" id="savedGrid"></div>
-        <p class="empty-state" id="savedEmpty">Set up your local profile and save a recipe to see it here.</p>
+        <div class="empty-state" id="savedEmpty">
+          <h2>No saved recipes yet</h2>
+          <p>Use the Save button on any recipe to keep it here. You can add it to your meal plan whenever you're ready.</p>
+          <a class="btn btn-primary" href="recipes.html">Browse recipes</a>
+        </div>
       <div class="page-related"><a href="recipes.html">Find recipes to save →</a></div></div>
     </section>
 </main>
