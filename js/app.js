@@ -650,6 +650,33 @@
     });
   })();
 
+  function renderRecipeDetail(detail, recipe, modal = false) {
+    const titleTag = modal ? "h2" : "h1";
+    const sectionTag = modal ? "h3" : "h2";
+    const prefix = modal ? "modal-" : "";
+    detail.innerHTML = `
+      ${modal ? "" : '<a class="back-link" href="recipes.html">&larr; All recipes</a>'}
+      <div class="recipe-detail-header">
+        <figure>${recipePhoto(recipe, true)}<figcaption>Serving suggestion; toppings and garnishes may vary.</figcaption></figure>
+        <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipe.category)} · ${esc(recipe.difficulty)}</p>
+          <${titleTag} id="${prefix}recipeTitle">${esc(recipe.name)}</${titleTag}><p>${esc(recipe.blurb)}</p>
+          <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Cooking time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
+          <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
+          <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
+        </div>
+      </div>
+      <div class="recipe-cooking-layout">
+        <section class="ingredient-section" aria-labelledby="${prefix}ingredientHeading"><${sectionTag} id="${prefix}ingredientHeading">Ingredients</${sectionTag}>
+          <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}. Check off ingredients as you prepare them.</p>
+          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label></li>`).join("")}</ul>
+        </section>
+        <section aria-labelledby="${prefix}methodHeading"><${sectionTag} id="${prefix}methodHeading">Instructions</${sectionTag}>
+          <ol class="method-list">${recipe.steps.map((step) => `<li>${esc(step)}</li>`).join("")}</ol>
+        </section>
+      </div>`;
+    updateRecipeSaveButtons();
+  }
+
   (function initRecipeDetail() {
     const detail = $("#recipeDetail");
     if (!detail) return;
@@ -660,27 +687,38 @@
       return;
     }
     document.title = `${recipe.name} — KitchenPath`;
-    detail.innerHTML = `
-      <a class="back-link" href="recipes.html">&larr; All recipes</a>
-      <div class="recipe-detail-header">
-        <figure>${recipePhoto(recipe, true)}<figcaption>Serving suggestion; toppings and garnishes may vary.</figcaption></figure>
-        <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipe.category)} · ${esc(recipe.difficulty)}</p>
-          <h1>${esc(recipe.name)}</h1><p>${esc(recipe.blurb)}</p>
-          <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Cooking time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
-          <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
-          <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
-        </div>
-      </div>
-      <div class="recipe-cooking-layout">
-        <section class="ingredient-section" aria-labelledby="ingredientHeading"><h2 id="ingredientHeading">Ingredients</h2>
-          <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}. Check off ingredients as you prepare them.</p>
-          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label></li>`).join("")}</ul>
-        </section>
-        <section aria-labelledby="methodHeading"><h2 id="methodHeading">Instructions</h2>
-          <ol class="method-list">${recipe.steps.map((step) => `<li>${esc(step)}</li>`).join("")}</ol>
-        </section>
-      </div>`;
-    updateRecipeSaveButtons();
+    renderRecipeDetail(detail, recipe);
+  })();
+
+  (function initRecipePopup() {
+    const dialog = document.createElement("dialog");
+    dialog.id = "recipeDialog";
+    dialog.className = "recipe-dialog";
+    dialog.setAttribute("aria-labelledby", "modal-recipeTitle");
+    dialog.innerHTML = `<div class="recipe-dialog-toolbar"><span>Recipe</span><button type="button" class="btn btn-ghost btn-small" id="closeRecipeDialog" autofocus>Close <span aria-hidden="true">&times;</span></button></div><div class="recipe-dialog-content"></div>`;
+    document.body.appendChild(dialog);
+    const content = $(".recipe-dialog-content", dialog);
+    let opener;
+    $("#closeRecipeDialog").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      document.body.classList.remove("recipe-modal-open");
+      opener?.focus({ preventScroll: true });
+    });
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href^="recipe.html?id="]');
+      if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || (event.button && event.button !== 0)) return;
+      const recipe = recipeById(new URLSearchParams(link.getAttribute("href").split("?")[1]).get("id"));
+      if (!recipe) return;
+      event.preventDefault();
+      opener = link;
+      renderRecipeDetail(content, recipe, true);
+      dialog.showModal();
+      document.body.classList.add("recipe-modal-open");
+      content.scrollTop = 0;
+    });
   })();
 
   /* ----------------------------------------------------------------------

@@ -36,18 +36,20 @@ export default async function run(page, ui) {
   await page.waitForTimeout(200);
   out.backToAll = await page.locator(".recipe-card").count();
 
-  // --- Dedicated recipe page and day picker -------------------------------
+  // --- Centered recipe popup and day picker -------------------------------
   await page.locator('.recipe-details a').first().click();
   out.recipeDetail = {
-    name: await page.locator('main h1').innerText(),
-    ingredients: await page.locator('.detail-ingredients li').count(),
-    steps: await page.locator('.method-list li').count(),
-    photoLoaded: await page.locator('.recipe-detail-header img').evaluate(img => img.complete && img.naturalWidth > 0)
+    name: await page.locator('#modal-recipeTitle').innerText(),
+    ingredients: await page.locator('#recipeDialog .detail-ingredients li').count(),
+    steps: await page.locator('#recipeDialog .method-list li').count(),
+    photoLoaded: await page.locator('#recipeDialog .recipe-detail-header img').evaluate(img => img.complete && img.naturalWidth > 0)
   };
-  await page.locator('main .add-to-plan').click();
+  await page.locator('#recipeDialog .add-to-plan').click();
   out.dayPickerOpen = await page.locator('#planDialog').isVisible();
   await page.locator('#cancelPlan').click();
   out.dayPickerClosed = !(await page.locator('#planDialog').isVisible());
+  await page.locator('#closeRecipeDialog').click();
+  out.recipePopupClosed = !(await page.locator('#recipeDialog').isVisible());
 
   // --- FAQ accordion ------------------------------------------------------
   await visit('faq.html');

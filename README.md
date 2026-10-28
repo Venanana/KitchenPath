@@ -30,7 +30,7 @@ This server hosts the current interactive frontend. Accounts, database storage, 
 The homepage is a short introduction. Each feature has a separate page: `recipes.html`, `saved.html`, `planner.html`, `groceries.html`, `basics.html`, `glossary.html`, and `faq.html`. Individual recipes open at `recipe.html?id=garlic-butter-pasta` (using the selected recipe's ID). Shared navigation links the pages, and browser storage keeps your plan, favorites, and preferences as you move between them. Use the same local server address for every page.
 
 - Search and filter 12 recipes with locally hosted food photos.
-- Open recipe details with approximate servings, ingredient checkboxes, and instructions.
+- Open recipe details in a centered popup with approximate servings, ingredient checkboxes, and instructions. Longer recipes scroll inside the popup; Close, Escape, or clicking outside returns to browsing. Direct recipe URLs still work as standalone pages.
 - Save favorite recipes without creating an account; a local profile name is optional.
 - Add recipes to a chosen day from the recipe cards, saved list, or detail page. Occupied days show a replacement warning before confirmation.
 - View meal photos in the planner, change a dinner, or remove one day at a time.
