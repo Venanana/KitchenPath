@@ -3,6 +3,8 @@
   const i18n = window.KitchenPathI18n;
   const pairs = `KitchenPath — Learn to Cook, One Meal at a Time|KitchenPath — Matutong Magluto, Isang Pagkain sa Bawat Hakbang
 Search adobo, munggo, ingredients…|Maghanap ng adobo, munggo, o sangkap…
+Beginner|Baguhan
+All levels|Lahat ng antas
 Choose a profile|Pumili ng profile
 On this browser|Sa browser na ito
 Guest|Bisita

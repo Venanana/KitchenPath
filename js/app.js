@@ -1040,6 +1040,15 @@
     if (["beginner", "all"].includes(preferences.difficulty)) $("#plannerDifficulty").value = preferences.difficulty;
     if (["all", "filipino"].includes(preferences.cuisine)) $("#plannerCuisine").value = preferences.cuisine;
 
+    function syncPreferenceSummary() {
+      const time = Number($("#plannerTime").value);
+      $("#preferenceTime").textContent = time < 120 ? `Up to ${time} minutes` : `Up to ${time / 60} hours`;
+      $("#preferenceDifficulty").textContent = $("#plannerDifficulty").value === "beginner" ? "Beginner" : "All levels";
+      $("#preferenceCuisine").textContent = $("#plannerCuisine").value === "filipino" ? "Filipino" : "Any cuisine";
+    }
+    $("#plannerPreferences").addEventListener("change", syncPreferenceSummary);
+    syncPreferenceSummary();
+
     $("#plannerPreferences").addEventListener("submit", (event) => {
       event.preventDefault();
       const time = Number($("#plannerTime").value);
@@ -1067,6 +1076,8 @@
       renderPlanner();
       saveMealPlan();
       $("#plannerStatus").textContent = `Added ${emptyDays.length} dinner suggestions. Swap any meal using its dropdown.`;
+      $("#plannerSuggestions").open = false;
+      $("#plannerSuggestionsToggle").focus({ preventScroll: true });
     });
 
     $("#clearPlan").addEventListener("click", () => {

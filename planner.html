@@ -77,11 +77,15 @@
           <p>One dinner a day. Build your own week or let us give you a starting point.</p>
         </header>
         <div class="planner-workspace">
+          <details class="planner-suggestions" id="plannerSuggestions">
+            <summary id="plannerSuggestionsToggle">
+              <span class="planner-suggestions-copy">
+                <strong>Suggest dinners</strong>
+                <span class="planner-preference-summary"><span id="preferenceTime">Up to 60 minutes</span><span aria-hidden="true"> · </span><span id="preferenceDifficulty">Beginner</span><span aria-hidden="true"> · </span><span id="preferenceCuisine">Any cuisine</span></span>
+              </span>
+            </summary>
           <form id="plannerPreferences" class="planner-preferences">
-            <div class="planner-intro">
-              <h3>Dinner preferences</h3>
-              <p>Suggestions fill empty days, so your own choices stay in place.</p>
-            </div>
+            <p class="device-note">Suggestions fill empty days, so your own choices stay in place.</p>
             <label for="plannerTime">Time per dinner
               <select id="plannerTime" name="time">
                 <option value="15">Up to 15 minutes</option>
@@ -103,6 +107,7 @@
             </label>
             <button type="submit" class="btn btn-primary">Suggest dinners</button>
           </form>
+          </details>
           <div class="planner-toolbar">
             <p id="plannerSummary" aria-live="polite">0 of 7 dinners planned</p>
             <button id="clearPlan" class="text-button" type="button" disabled>Clear week</button>

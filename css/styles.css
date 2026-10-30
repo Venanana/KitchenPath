@@ -555,22 +555,27 @@ main { flex: 1; }
 
 .planner-preferences {
   display: grid;
-  grid-template-columns: minmax(220px, 1.3fr) 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   align-items: end;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border);
+  padding-top: 16px;
 }
-.planner-intro { grid-row: span 2; align-self: center; }
-.planner-intro h3 { font-size: 1.6rem; }
-.planner-intro p { color: var(--text-soft); font-size: .9rem; margin: 0; max-width: 30ch; }
+.planner-suggestions { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.planner-suggestions > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; cursor: pointer; list-style: none; }
+.planner-suggestions > summary::-webkit-details-marker { display: none; }
+.planner-suggestions > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg); flex-shrink: 0; margin: 0 4px 5px; }
+.planner-suggestions[open] > summary::after { transform: rotate(225deg); margin-top: 8px; }
+.planner-suggestions-copy { display: grid; gap: 4px; min-width: 0; }
+.planner-suggestions-copy > strong { font-size: 1rem; }
+.planner-preference-summary { color: var(--text-soft); font-size: .8rem; line-height: 1.6; overflow-wrap: anywhere; }
+.planner-preferences .device-note { grid-column: 1 / -1; margin: 0; }
 .planner-preferences label { display: grid; gap: 8px; font-size: .85rem; font-weight: 600; }
 .planner-preferences select {
   width: 100%; min-width: 0;
   padding: 12px; border: 1px solid var(--border); border-radius: 10px;
   background: var(--surface); color: var(--text); font: inherit;
 }
-.planner-preferences .btn { grid-column: 2 / -1; cursor: pointer; }
+.planner-preferences .btn { grid-column: 1 / -1; cursor: pointer; }
 .planner-toolbar, .grocery-toolbar {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 12px; margin: 24px 0 18px;
@@ -609,8 +614,6 @@ button:disabled { opacity: .45; cursor: default; }
 
 @media (max-width: 780px) {
   .planner-preferences { grid-template-columns: 1fr 1fr; }
-  .planner-intro { grid-column: 1 / -1; grid-row: auto; }
-  .planner-intro p { max-width: none; }
   .planner-preferences .btn { grid-column: 1 / -1; }
   .grocery-list { grid-template-columns: 1fr; }
 }
