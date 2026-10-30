@@ -737,7 +737,11 @@ button:disabled { opacity: .45; cursor: default; }
     visibility: hidden;
   }
   .primary-nav > ul { overflow: hidden; flex-direction: column; gap: 0; padding: 8px 22px; }
-  .primary-nav.is-open { grid-template-rows: 1fr; visibility: visible; }
+  .primary-nav.is-open {
+    grid-template-rows: 1fr; visibility: visible;
+    max-height: calc(100dvh - 110px); overflow-y: auto;
+  }
+  .primary-nav.is-open > ul { overflow: visible; }
   .primary-nav a { border-radius: 10px; padding: 12px; }
   .auth-panel { right: -58px; }
 
@@ -886,7 +890,6 @@ body.recipe-modal-open { overflow: hidden; }
   .recipe-detail-header .food-photo { max-height: 380px; }
   .recipe-cooking-layout h2 { font-size: 1.4rem; }
   .section { padding: 36px 0; }
-  .primary-nav.is-open { max-height: calc(100dvh - 110px); overflow-y: auto; }
 }
 @media (max-width: 460px) {
   .header-inner { display: grid; grid-template-columns: minmax(0, 1fr) 42px 42px; gap: 6px 10px; }
