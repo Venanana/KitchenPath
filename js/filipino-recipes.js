@@ -316,12 +316,12 @@ window.KITCHENPATH_FILIPINO_RECIPES = [
     "note": "Resized by Wikimedia; illustrative serving suggestion."
   },
   "tortang-talong": {
-    "source": "https://commons.wikimedia.org/wiki/File:Tortang_Talong_2019.jpg",
-    "title": "File:Tortang Talong 2019.jpg",
-    "author": "Cloudapple",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "note": "Resized by Wikimedia; illustrative serving suggestion."
+    "source": "https://commons.wikimedia.org/wiki/File:EGGPLANT_TORTA.jpg",
+    "title": "File:EGGPLANT TORTA.jpg",
+    "author": "whologwhy",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "note": "Resized by Wikimedia to 960px; illustrative serving suggestion with extra vegetables and garnish."
   },
   "ginisang-ampalaya": {
     "source": "https://commons.wikimedia.org/wiki/File:Ang_Ginisang_Ampalaya_01.jpg",

@@ -764,9 +764,12 @@ button:disabled { opacity: .45; cursor: default; }
 
 /* Recipe browsing and cooking */
 .food-photo { display: block; position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--bg-alt); }
-.food-photo img { position: relative; width: 100%; height: 100%; object-fit: cover; }
+.food-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .photo-fallback { position: absolute; inset: 0; display: grid; place-items: center; font-size: 2rem; }
-.recipe-thumb { display: block; height: auto; aspect-ratio: 3 / 2; background: var(--bg-alt); }
+.recipe-thumb { position: relative; display: block; height: auto; aspect-ratio: 3 / 2; flex-shrink: 0; overflow: hidden; background: var(--bg-alt); }
+.recipe-thumb .food-photo { position: absolute; inset: 0; }
+.recipe-card .recipe-facts { margin-top: auto; }
+.recipe-card .recipe-details { margin-top: 0; }
 .recipe-card { animation: none; box-shadow: none; border-radius: 10px; }
 .recipe-card:hover { transform: none; box-shadow: none; border-color: var(--accent); }
 .recipe-body h3 a, .mini-recipe h3 a, .planner-day h3 a { color: var(--text); }

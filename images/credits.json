@@ -16,7 +16,7 @@
     "ginataang-kalabasa": "https://creativecommons.org/licenses/by-sa/4.0",
     "ginisang-monggo": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "pinakbet": "https://creativecommons.org/licenses/by-sa/4.0",
-    "tortang-talong": "https://creativecommons.org/licenses/by-sa/4.0",
+    "tortang-talong": "https://creativecommons.org/licenses/by/2.0/",
     "ginisang-ampalaya": "https://creativecommons.org/licenses/by-sa/4.0",
     "adobong-kangkong": "https://creativecommons.org/licenses/by/2.0",
     "chop-suey": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -63,7 +63,7 @@
     "ginataang-kalabasa": "https://commons.wikimedia.org/wiki/File:Ginataang_kalabasa_(Philippines).jpg",
     "ginisang-monggo": "https://commons.wikimedia.org/wiki/File:Ginisang_munggo_with_fried_bangus.jpg",
     "pinakbet": "https://commons.wikimedia.org/wiki/File:Pinakbet_ni_Lakay_Jesse.jpg",
-    "tortang-talong": "https://commons.wikimedia.org/wiki/File:Tortang_Talong_2019.jpg",
+    "tortang-talong": "https://commons.wikimedia.org/wiki/File:EGGPLANT_TORTA.jpg",
     "ginisang-ampalaya": "https://commons.wikimedia.org/wiki/File:Ang_Ginisang_Ampalaya_01.jpg",
     "adobong-kangkong": "https://commons.wikimedia.org/wiki/File:Adobong_Kangkong_(water_spinach_adobo,_Philippines).jpg",
     "chop-suey": "https://commons.wikimedia.org/wiki/File:Filipino_Chop_Suey.jpg",
@@ -196,12 +196,12 @@
       "note": "Resized by Wikimedia; illustrative serving suggestion."
     },
     "tortang-talong": {
-      "source": "https://commons.wikimedia.org/wiki/File:Tortang_Talong_2019.jpg",
-      "title": "File:Tortang Talong 2019.jpg",
-      "author": "Cloudapple",
-      "license": "CC BY-SA 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "note": "Resized by Wikimedia; illustrative serving suggestion."
+      "source": "https://commons.wikimedia.org/wiki/File:EGGPLANT_TORTA.jpg",
+      "title": "File:EGGPLANT TORTA.jpg",
+      "author": "whologwhy",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "note": "Resized by Wikimedia to 960px; illustrative serving suggestion with extra vegetables and garnish."
     },
     "ginisang-ampalaya": {
       "source": "https://commons.wikimedia.org/wiki/File:Ang_Ginisang_Ampalaya_01.jpg",
