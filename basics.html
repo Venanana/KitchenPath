@@ -41,16 +41,29 @@
 
       <div class="auth" id="authBox">
         <button class="auth-button" id="authToggle" type="button" aria-expanded="false" aria-controls="authPanel">Profile</button>
-        <div class="auth-panel" id="authPanel" hidden>
-          <form id="authForm">
-            <p class="profile-heading">On this device</p><label for="authName">Name (optional)</label>
-            <div class="auth-row">
-              <input id="authName" name="authName" type="text" autocomplete="name" maxlength="40" placeholder="Your name">
-              <button class="btn btn-small" type="submit">Save</button>
+        <div class="auth-panel" id="authPanel" role="region" aria-labelledby="profilePanelTitle" hidden>
+          <p class="profile-heading" id="profilePanelTitle">Choose a profile</p>
+          <div class="profile-current" id="profileCurrent"></div>
+          <p class="auth-note">Each profile has its own saved recipes, meal plan, and grocery checks on this browser.</p>
+          <div class="profile-list" id="profileList" role="group" aria-label="Profiles on this browser"></div>
+          <div class="profile-actions">
+            <button class="text-button" id="addProfile" type="button">+ Add a profile</button>
+            <button class="text-button" id="editProfile" type="button" hidden>Edit profile</button>
+            <button class="text-button" id="guestProfile" type="button" hidden>Use guest profile</button>
+          </div>
+          <form id="authForm" hidden>
+            <h3 id="profileFormTitle">Add a profile</h3>
+            <label for="authName">Profile name</label>
+            <div class="auth-row"><input id="authName" name="authName" type="text" autocomplete="nickname" maxlength="40" placeholder="Your name" required></div>
+            <fieldset class="profile-avatar-field"><legend>Choose an avatar</legend><div id="profileAvatars" class="profile-avatar-options"></div></fieldset>
+            <p class="device-note">The first profile starts with your current recipes and plan. New profiles after that start empty.</p>
+            <div class="dialog-actions">
+              <button class="btn btn-ghost btn-small" id="cancelProfile" type="button">Cancel</button>
+              <button class="btn btn-small" id="profileSave" type="submit">Create profile</button>
             </div>
           </form>
-          <p class="auth-note">Recipes and plans save in this browser. Adding your name is optional; nothing syncs to other devices.</p>
-          <button class="text-button" id="signOutButton" type="button" hidden>Remove name</button>
+          <p class="profile-error" id="profileError" role="status" aria-live="polite"></p>
+          <p class="auth-note">Profiles stay on this browser. They do not use a password or sync to other devices.</p>
         </div>
       </div>
     </div>
@@ -200,6 +213,10 @@
   <button class="to-top" id="toTop" aria-label="Back to top" hidden>↑</button>
 
   <script src="js/filipino-recipes.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/recipes-tl.js"></script>
+  <script src="js/translations-tl.js"></script>
+  <script src="js/profiles.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

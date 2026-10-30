@@ -53,7 +53,7 @@
       time: 35,
       difficulty: "Easy",
       blurb: "Chicken thighs and rice cooked together in one pan.",
-      ingredients: ["2 chicken thighs", "1 cup rice", "2 cups stock or water", "1 onion"],
+      ingredients: ["2 chicken thighs", "1 cup rice", "2 cups stock or water", "1 onion", "1 tbsp cooking oil", "Salt and pepper to taste"],
       steps: [
         "Season chicken with salt and pepper, then sear in a hot pan 4 minutes per side. Set aside.",
         "Cook diced onion in the same pan 3 minutes.",
@@ -69,7 +69,7 @@
       time: 8,
       difficulty: "Very easy",
       blurb: "Crisp toast with fresh tomato, garlic, and olive oil.",
-      ingredients: ["2 slices bread", "1 ripe tomato", "1 clove garlic", "Olive oil"],
+      ingredients: ["2 slices bread", "1 ripe tomato", "1 clove garlic", "Olive oil", "Salt to taste"],
       steps: [
         "Toast the bread until crisp.",
         "Rub the raw garlic clove over the hot toast — it melts right in.",
@@ -85,7 +85,7 @@
       time: 20,
       difficulty: "Easy",
       blurb: "A quick vegetable stir-fry with soy sauce, served over rice.",
-      ingredients: ["Any vegetables you have", "2 tbsp soy sauce", "1 tsp sugar", "Rice to serve"],
+      ingredients: ["Any vegetables you have", "2 tbsp soy sauce", "1 tsp sugar", "1 tbsp cooking oil", "Rice to serve"],
       steps: [
         "Chop everything into similar-sized pieces so it cooks evenly.",
         "Heat the pan until very hot, add oil, then the hardest vegetables first (carrot, broccoli).",
@@ -117,7 +117,7 @@
       time: 25,
       difficulty: "Easy",
       blurb: "A tomato, onion, and garlic sauce to serve with your choice of pasta.",
-      ingredients: ["1 can chopped tomatoes", "1 onion", "2 cloves garlic", "Olive oil"],
+      ingredients: ["1 can (400g) chopped tomatoes", "1 onion", "2 cloves garlic", "Olive oil", "Salt to taste", "Pinch of sugar or splash of vinegar (optional, to balance the sauce)"],
       steps: [
         "Cook diced onion in olive oil over medium heat for 5 minutes until soft.",
         "Add garlic and cook 1 minute more.",
@@ -197,7 +197,7 @@
       time: 15,
       difficulty: "Very easy",
       blurb: "A bowl of rice topped with an egg, vegetables, and soy sauce.",
-      ingredients: ["1 cup cooked rice", "1 egg", "Soy sauce", "Any leftover vegetables"],
+      ingredients: ["1 cup cooked rice", "1 egg", "Soy sauce", "1 tsp cooking oil", "Any leftover vegetables"],
       steps: [
         "Warm the rice in a bowl.",
         "Fry an egg in a hot pan until the edges are crisp.",
@@ -283,6 +283,9 @@
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const translate = (text) => window.KitchenPathI18n?.translate(text) ?? text;
+  window.KitchenPathI18n?.registerRecipes(RECIPES);
+  window.KitchenPathI18n?.registerContent(HERO_MEALS, GLOSSARY, FAQS);
 
   /** Escape user-facing strings before inserting as HTML. */
   function esc(str) {
@@ -314,7 +317,10 @@
     if (event.target.matches?.(".food-photo img")) event.target.hidden = true;
   }, true);
 
-  let profile = readJSON(STORAGE_KEYS.profile, null);
+  const profileStore = window.KitchenPathProfiles?.createStore(localStorage, STORAGE_KEYS);
+  if (profileStore) Object.assign(STORAGE_KEYS, profileStore.keys());
+  let profile = profileStore?.active() || readJSON(STORAGE_KEYS.profile, null);
+  if (profileStore && !profileStore.active()) profile = null;
   let savedRecipes = new Set(readJSON(STORAGE_KEYS.saved, []));
   let mealPlan = readJSON(STORAGE_KEYS.plan, {});
   let groceryChecks = new Set(readJSON(STORAGE_KEYS.groceries, []));
@@ -327,19 +333,6 @@
     localStorage.setItem(STORAGE_KEYS.plan, JSON.stringify(mealPlan));
     renderPlanSummary();
     renderGroceries();
-  }
-
-  function openAuthPanel() {
-    const panel = $("#authPanel");
-    const toggle = $("#authToggle");
-    if (!panel || !toggle) return;
-    panel.hidden = false;
-    toggle.setAttribute("aria-expanded", "true");
-    $("#authName")?.focus();
-  }
-
-  function isSignedIn() {
-    return Boolean(profile && profile.name);
   }
 
   function updateRecipeSaveButtons() {
@@ -421,9 +414,74 @@
     });
   }
 
-  function groceryItems() {
+  // Product examples are alternatives: choose one, then use the recipe quantity.
+  const INGREDIENT_GUIDES = [
+    {
+      match: /\bchopped tomatoes\b/i,
+      brands: [["Mutti Polpa", "https://mutti-parma.com/products/polpa/"], ["Cirio Chopped Tomatoes", "https://www.cirio1856.us/products/diced-chopped-tomatoes/"]],
+      tip: "Use 400g total, including the juice. Choose plain chopped tomatoes; tomato paste and sweet spaghetti sauce need different amounts."
+    },
+    {
+      match: /\btomato sauce\b/i,
+      brands: [["Del Monte Tomato Sauce", "https://www.delmontephil.com/our-products/products"], ["UFC Tomato Sauce", "https://nutriasia.com/brands/ufc/"]],
+      tip: "Choose the tomato sauce variant and measure the recipe amount. Sweet spaghetti sauce and concentrated tomato paste will change the flavour and thickness."
+    },
+    {
+      match: /\bsoy sauce\b/i,
+      brands: [["Datu Puti Soy Sauce", "https://nutriasia.com/export-operations/"], ["Silver Swan Soy Sauce", "https://nutriasia.com/product_category/soy-sauces/page/2/"]],
+      tip: "Use regular soy sauce. Saltiness varies by brand; taste the cooked sauce before adding salt. Sweet or dark soy sauce will change the result."
+    },
+    {
+      match: /\bcane vinegar\b/i,
+      brands: [["Datu Puti Cane Vinegar", "https://nutriasia.com/export-operations/"], ["Silver Swan Cane Vinegar", "https://nutriasia.com/product_category/vinegar/"]],
+      tip: "Choose plain cane vinegar. Spiced vinegar adds chilli and other flavours that are not included in these recipes."
+    },
+    {
+      match: /\bfish sauce\b|\bpatis\b/i,
+      brands: [["Datu Puti Patis", "https://nutriasia.com/export-operations/"], ["Silver Swan Patis", "https://nutriasia.com/products/silver-swan-patis-100ml/"]],
+      tip: "Use the measured amount first. Taste the cooked broth before adding more patis or salt, since brands differ in saltiness."
+    },
+    {
+      match: /\boyster sauce\b/i,
+      brands: [["Lee Kum Kee Panda Oyster Flavored Sauce", "https://usa.lkk.com/en/foodservices/homecooks/products/panda-brand-oyster-flavored-sauce"], ["Datu Puti Oyster Sauce", "https://nutriasia.com/export-operations/"]],
+      tip: "Measure the sauce; it already adds salt and sweetness. Taste before adding extra soy sauce or salt."
+    },
+    {
+      match: /\btamarind soup mix\b/i,
+      brands: [["Knorr Sinigang sa Sampalok Original", "https://www.knorr.com/ph/products.html"], ["UFC Sinigang Mix", "https://nutriasia.com/export-operations/"]],
+      tip: "Follow your chosen packet's directions for 1.5 litres of broth. Add gradually and taste before adding patis; packet sizes and strengths differ."
+    },
+    {
+      match: /\bcurry powder\b/i,
+      tip: "Use mild curry powder. A curry recipe mix or curry paste may contain salt and other seasonings, so it is not a spoon-for-spoon replacement."
+    },
+    {
+      match: /\bstock\b/i,
+      tip: "Use prepared liquid stock. If using a cube or powder, dissolve it in water according to the label to make the listed volume; do not use that volume of dry seasoning. Taste before adding salt."
+    },
+    {
+      match: /\bbagoong\b|\bshrimp paste\b/i,
+      tip: "Choose sauteed shrimp paste (bagoong alamang). Saltiness and sweetness vary, so taste the cooked dish before adding more."
+    },
+    {
+      match: /\bsalt\b|\bpepper\b|\bpeppercorns\b/i,
+      tip: "Use plain salt and black pepper, keeping peppercorns whole when specified. For 'to taste', add a small pinch, stir, and taste once the dish is cooked. Seasoning mixes add other flavours and are not direct replacements."
+    }
+  ];
+
+  function ingredientGuide(ingredient) {
+    const guide = INGREDIENT_GUIDES.find((entry) => entry.match.test(ingredient));
+    if (!guide) return "";
+    const brands = guide.brands
+      ? `<p>Choose one: ${guide.brands.map(([name, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`).join(" or ")}. Other brands of the same product type also work; availability varies by store.</p>`
+      : "";
+    return `<details class="ingredient-guide"><summary>${guide.brands ? "Brand options & tips" : "Seasoning tip"}</summary>${brands}<p>${esc(guide.tip)}</p></details>`;
+  }
+
+  function groceryItems(scope = $("#groceryDay")?.value || "week") {
     const items = new Map();
     DAYS.forEach((day) => {
+      if (scope !== "week" && scope !== day) return;
       const recipe = recipeById(mealPlan[day]);
       if (!recipe) return;
       recipe.ingredients.forEach((ingredient) => {
@@ -437,23 +495,29 @@
 
   function renderGroceries() {
     const items = groceryItems();
-    const activeKeys = new Set(items.map((item) => item.key));
+    const activeKeys = new Set(groceryItems("week").map((item) => item.key));
     groceryChecks = new Set([...groceryChecks].filter((key) => activeKeys.has(key)));
     localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
     if (!$("#groceryList")) return;
     $("#groceryList").innerHTML = items.map((item) => `
-      <label class="grocery-item">
+      <div class="grocery-entry"><label class="grocery-item">
         <input type="checkbox" data-ingredient="${esc(item.key)}" ${groceryChecks.has(item.key) ? "checked" : ""}>
         <span><strong>${esc(item.label)}</strong>
           <small>${item.days.length > 1 ? `Needed ${item.days.length} times · ` : ""}${esc(item.days.join(", "))}</small>
         </span>
-      </label>
+      </label>${ingredientGuide(item.label)}</div>
     `).join("");
     $("#groceryEmpty").hidden = items.length > 0;
+    const scope = $("#groceryDay")?.value || "week";
+    const scopeLabel = scope === "week" ? "Whole week" : `${scope}'s dinner`;
+    $("#groceryEmpty h3").textContent = scope === "week" ? "No groceries yet" : `No dinner planned for ${scope}`;
+    $("#groceryEmpty p").textContent = scope === "week"
+      ? "Choose your first dinner and its ingredients will appear here."
+      : `Add a dinner for ${scope} in your meal plan, or select another day.`;
     $("#downloadGroceries").disabled = !items.length;
     $("#grocerySummary").textContent = items.length
-      ? `${groceryChecks.size} of ${items.length} ingredient entries checked`
-      : "Plan a dinner to get started.";
+      ? `${scopeLabel}: ${items.filter((item) => groceryChecks.has(item.key)).length} of ${items.length} ingredient entries checked`
+      : `${scopeLabel}: no dinner planned.`;
   }
 
   /* ----------------------------------------------------------------------
@@ -465,42 +529,85 @@
     const panel = $("#authPanel");
     const form = $("#authForm");
     const input = $("#authName");
-    const signOut = $("#signOutButton");
-    if (!toggle || !panel || !form || !input || !signOut) return;
+    const guestButton = $("#guestProfile");
+    const profileList = $("#profileList");
+    const addButton = $("#addProfile");
+    const editButton = $("#editProfile");
+    const error = $("#profileError");
+    let editingId = null;
+    if (!toggle || !panel || !form || !input || !profileStore) return;
+
+    function avatarMarkup(avatar, extra = "") {
+      return `<span class="profile-avatar ${extra}" aria-hidden="true">${esc(avatar)}</span>`;
+    }
 
     function syncAuth() {
-      const signedIn = isSignedIn();
-      toggle.textContent = signedIn ? profile.name : "Profile";
-      input.value = signedIn ? profile.name : "";
-      signOut.hidden = !signedIn;
+      profile = profileStore.active();
+      toggle.innerHTML = `${avatarMarkup(profile?.avatar || "👤")}<span class="profile-toggle-name" ${profile ? 'translate="no"' : ""}>${esc(profile?.name || "Profile")}</span>`;
+      $("#profileCurrent").innerHTML = `${avatarMarkup(profile?.avatar || "👤", "profile-avatar-large")}<div><strong ${profile ? 'translate="no"' : ""}>${esc(profile?.name || "Guest")}</strong><p>On this browser</p></div>`;
+      profileList.innerHTML = profileStore.list().map((item) => `
+        <button type="button" class="profile-option" data-profile-id="${esc(item.id)}" aria-pressed="${item.id === profile?.id}">
+          ${avatarMarkup(item.avatar)}<span class="profile-option-name" translate="no">${esc(item.name)}</span>
+          ${item.id === profile?.id ? '<small>Active</small>' : '<small>Switch</small>'}
+        </button>`).join("");
+      editButton.hidden = !profile;
+      guestButton.hidden = !profile;
+      error.textContent = "";
       renderSavedRecipes();
       updateRecipeSaveButtons();
     }
+
+    function showForm(editing) {
+      editingId = editing ? profile.id : null;
+      form.hidden = false;
+      input.value = editing ? profile.name : "";
+      $("#profileFormTitle").textContent = editing ? "Edit profile" : "Add a profile";
+      $("#profileSave").textContent = editing ? "Save changes" : "Create profile";
+      const avatar = editing ? profile.avatar : profileStore.avatars[0];
+      $("#profileAvatars").innerHTML = profileStore.avatars.map((item, index) => `<label class="avatar-choice"><input type="radio" name="avatar" value="${esc(item)}" ${item === avatar ? "checked" : ""} required><span aria-hidden="true">${esc(item)}</span><span class="sr-only">${["Person", "Woman chef", "Man chef", "Avocado", "Frying pan", "Strawberry"][index]}</span></label>`).join("");
+      error.textContent = "";
+      input.focus();
+    }
+
+    function changeProfile(id) {
+      try {
+        profileStore.select(id);
+        window.location.reload();
+      } catch { error.textContent = "Could not save the profile. Check your browser storage and try again."; }
+    }
+
+    addButton.addEventListener("click", () => showForm(false));
+    editButton.addEventListener("click", () => showForm(true));
+    $("#cancelProfile").addEventListener("click", () => { form.hidden = true; error.textContent = ""; addButton.focus(); });
+    guestButton.addEventListener("click", () => changeProfile(null));
+    profileList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-profile-id]");
+      if (button && button.dataset.profileId !== profile?.id) changeProfile(button.dataset.profileId);
+    });
 
     toggle.addEventListener("click", () => {
       const open = panel.hidden;
       panel.hidden = !open;
       toggle.setAttribute("aria-expanded", String(open));
-      if (open) input.focus();
+      if (open) ($(".profile-option", profileList) || addButton).focus();
     });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const name = input.value.trim();
-      profile = name ? { name } : null;
-      if (profile) localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
-      else localStorage.removeItem(STORAGE_KEYS.profile);
-      panel.hidden = true;
-      toggle.setAttribute("aria-expanded", "false");
-      syncAuth();
-    });
-
-    signOut.addEventListener("click", () => {
-      profile = null;
-      localStorage.removeItem(STORAGE_KEYS.profile);
-      panel.hidden = true;
-      toggle.setAttribute("aria-expanded", "false");
-      syncAuth();
+      if (!name) { error.textContent = "Enter a profile name."; input.focus(); return; }
+      const avatar = $('input[name="avatar"]:checked', form)?.value;
+      try {
+        if (editingId) {
+          profileStore.update(editingId, name, avatar);
+          form.hidden = true;
+          syncAuth();
+          editButton.focus();
+        } else {
+          profileStore.create(name, avatar);
+          window.location.reload();
+        }
+      } catch { error.textContent = "Could not save the profile. Check your browser storage and try again."; }
     });
 
     document.addEventListener("click", (e) => {
@@ -681,7 +788,7 @@
       <div class="recipe-cooking-layout">
         <section class="ingredient-section" aria-labelledby="${prefix}ingredientHeading"><${sectionTag} id="${prefix}ingredientHeading">Ingredients</${sectionTag}>
           <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}. Check off ingredients as you prepare them.</p>
-          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label></li>`).join("")}</ul>
+          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label>${ingredientGuide(ingredient)}</li>`).join("")}</ul>
         </section>
         <section aria-labelledby="${prefix}methodHeading"><${sectionTag} id="${prefix}methodHeading">Instructions</${sectionTag}>
           <ol class="method-list">${recipe.steps.map((step) => `<li>${esc(step)}</li>`).join("")}</ol>
@@ -763,12 +870,13 @@
       btn.type = "button";
       btn.className = "chip";
       btn.textContent = cat;
+      btn.dataset.category = cat;
       btn.setAttribute("aria-pressed", String(cat === "All"));
       btn.addEventListener("click", () => {
         activeCategory = cat;
         currentPage = 1;
         $$(".chip", filterWrap).forEach((c) =>
-          c.setAttribute("aria-pressed", String(c.textContent === cat))
+          c.setAttribute("aria-pressed", String(c.dataset.category === cat))
         );
         render();
       });
@@ -784,7 +892,9 @@
       const haystack = [recipe.name, recipe.category, recipe.cuisine || "", recipe.blurb, ...(recipe.aliases || []), ...recipe.ingredients]
         .join(" ")
         .toLowerCase();
-      return haystack.includes(query);
+      const localized = [recipe.name, recipe.category, recipe.blurb, ...recipe.ingredients]
+        .map((text) => window.KitchenPathI18n?.translate(text, true) ?? text).join(" ").toLowerCase();
+      return haystack.includes(query) || localized.includes(query);
     }
 
     function cardMarkup(recipe) {
@@ -974,6 +1084,9 @@
   (function initGroceries() {
     const list = $("#groceryList");
     if (!list) return;
+    const daySelect = $("#groceryDay");
+    daySelect.value = DAYS[(new Date().getDay() + 6) % 7];
+    daySelect.addEventListener("change", renderGroceries);
 
     list.addEventListener("change", (event) => {
       const input = event.target.closest("input[data-ingredient]");
@@ -981,13 +1094,14 @@
       if (input.checked) groceryChecks.add(input.dataset.ingredient);
       else groceryChecks.delete(input.dataset.ingredient);
       localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
-      $("#grocerySummary").textContent = `${groceryChecks.size} of ${groceryItems().length} ingredient entries checked`;
+      renderGroceries();
     });
 
     $("#downloadGroceries").addEventListener("click", () => {
       const lines = groceryItems().map((item) =>
-        `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${item.label} — ${item.days.length} recipe use(s): ${item.days.join(", ")}`);
-      const text = ["KitchenPath grocery list", "Amounts are per recipe use; adjust for portions and repeated meals.", "", ...lines].join("\n");
+        `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`);
+      const scopeLabel = daySelect.value === "week" ? "Whole week" : daySelect.value;
+      const text = [translate(`KitchenPath grocery list — ${scopeLabel}`), translate("Amounts are per recipe use; adjust for portions and repeated meals."), "", ...lines].join("\n");
       const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
       const link = document.createElement("a");
       link.href = url;
