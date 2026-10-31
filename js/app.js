@@ -803,6 +803,7 @@
           <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Total time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
           ${recipe.timeNote ? `<p class="device-note">${esc(recipe.timeNote)}</p>` : ""}
           <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
+          ${window.KITCHENPATH_TUTORIALS?.[recipe.id] ? `<button class="btn btn-ghost watch-tutorial" data-id="${esc(recipe.id)}" type="button">Watch tutorial</button>` : ""}
           <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
         </div>
       </div>
@@ -859,6 +860,57 @@
       dialog.showModal();
       document.body.classList.add("recipe-modal-open");
       content.scrollTop = 0;
+    });
+  })();
+
+  (function initTutorialPopup() {
+    const dialog = document.createElement("dialog");
+    dialog.id = "tutorialDialog";
+    dialog.className = "tutorial-dialog";
+    dialog.setAttribute("aria-labelledby", "tutorialHeading");
+    dialog.innerHTML = `<div class="tutorial-toolbar"><h2 id="tutorialHeading">Video tutorial</h2>
+      <button class="btn btn-ghost btn-small" id="closeTutorial" type="button" autofocus>Close tutorial</button></div>
+      <div class="tutorial-content"><h3 id="tutorialRecipe"></h3>
+      <p class="tutorial-credit" id="tutorialCredit" translate="no"></p>
+      <div class="tutorial-player" id="tutorialPlayer"></div>
+      <p class="device-note">This creator's version may use different ingredients or quantities. Follow the written recipe for your planned portions.</p>
+      <div class="tutorial-footer"><p>If the video will not play here, open it on YouTube.</p>
+      <a class="btn btn-primary" id="tutorialYouTube" target="_blank" rel="noopener noreferrer">Open on YouTube</a></div></div>`;
+    document.body.appendChild(dialog);
+    let opener;
+    function stop() { $("#tutorialPlayer").replaceChildren(); }
+    $("#closeTutorial").addEventListener("click", () => dialog.close());
+    $("#tutorialYouTube").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", event => {
+      if (event.target !== dialog) return;
+      const rect = dialog.getBoundingClientRect();
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      stop();
+      document.body.classList.remove("tutorial-modal-open");
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    });
+    document.addEventListener("click", event => {
+      const button = event.target.closest(".watch-tutorial");
+      if (!button) return;
+      const recipe = recipeById(button.dataset.id);
+      const tutorial = window.KITCHENPATH_TUTORIALS?.[recipe?.id];
+      if (!tutorial || !/^[A-Za-z0-9_-]{11}$/.test(tutorial.videoId)) return;
+      opener = button;
+      $("#tutorialRecipe").textContent = recipe.name;
+      $("#tutorialCredit").textContent = `${tutorial.title} · ${tutorial.creator}`;
+      $("#tutorialYouTube").href = `https://www.youtube.com/watch?v=${tutorial.videoId}`;
+      stop();
+      const frame = document.createElement("iframe");
+      frame.title = translate("Video tutorial");
+      frame.src = `https://www.youtube-nocookie.com/embed/${tutorial.videoId}?autoplay=1&rel=0&playsinline=1`;
+      frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      $("#tutorialPlayer").appendChild(frame);
+      dialog.showModal();
+      document.body.classList.add("tutorial-modal-open");
     });
   })();
 

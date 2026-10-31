@@ -929,6 +929,29 @@ body.recipe-modal-open { overflow: hidden; }
 /* Keep the profile picker within the viewport at tablet widths as well. */
 .auth-panel { right: 0; }
 
+/* Tutorial is a second dialog, so recipe previews remain in place underneath. */
+body.tutorial-modal-open { overflow: hidden; }
+.tutorial-dialog { width: min(920px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); overflow-y: auto; overscroll-behavior: contain; }
+.tutorial-dialog::backdrop { background: rgba(0, 0, 0, .65); }
+.tutorial-toolbar { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.tutorial-toolbar h2 { font-size: 1.1rem; margin: 0; }
+.tutorial-toolbar button { flex-shrink: 0; min-height: 44px; }
+.tutorial-content { padding: 20px; }
+.tutorial-content h3 { font-size: 1.4rem; overflow-wrap: anywhere; }
+.tutorial-credit { color: var(--text-soft); font-size: .82rem; overflow-wrap: anywhere; }
+.tutorial-player { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #161616; border-radius: 8px; overflow: hidden; }
+.tutorial-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.tutorial-footer { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 18px; }
+.tutorial-footer p { color: var(--text-soft); font-size: .85rem; margin: 0; flex: 1 1 220px; }
+@media (max-width: 600px) {
+  .tutorial-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+  .tutorial-toolbar { padding: 10px 12px; }
+  .tutorial-toolbar h2 { font-size: .95rem; }
+  .tutorial-toolbar .btn { padding: 8px 10px; font-size: .8rem; }
+  .tutorial-content { padding: 14px; }
+  .tutorial-footer .btn { width: 100%; }
+}
+
 /* A week of breakfast, lunch and dinner, grouped clearly by day. */
 .planner-grid { grid-template-columns: minmax(0, 1fr); }
 .planner-day { padding: 18px; }

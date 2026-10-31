@@ -21,6 +21,12 @@ Photo credits and licenses|Mga credit at lisensya ng larawan
 Breakfast, lunch, and dinner ingredients in separate sections. Choose a day or the whole week.|Magkahiwalay ang mga sangkap para sa almusal, tanghalian, at hapunan. Pumili ng araw o ng buong linggo.
 Matching ingredients share a check across meal sections.|Magkasama ang marka ng magkaparehong sangkap sa iba't ibang seksyon ng pagkain.
 No ingredients for this meal yet.|Wala pang sangkap para sa pagkaing ito.
+Watch tutorial|Panoorin ang gabay
+Video tutorial|Video na gabay sa pagluluto
+Close tutorial|Isara ang video
+Open on YouTube|Buksan sa YouTube
+If the video will not play here, open it on YouTube.|Kung hindi gumagana ang video rito, buksan ito sa YouTube.
+This creator's version may use different ingredients or quantities. Follow the written recipe for your planned portions.|Maaaring iba ang sangkap o dami sa bersyon ng gumawa ng video. Sundin ang nakasulat na resipe para sa nakaplanong dami ng pagkain.
 Keep this image on your phone or print it for your kitchen.|I-save ang larawang ito sa phone o i-print para sa kusina.
 No meal selected|Wala pang napiling pagkain
 Choose a meal|Pumili ng pagkain

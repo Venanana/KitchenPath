@@ -32,6 +32,7 @@ The homepage is a short introduction. Each feature has a separate page: `recipes
 - Browse 44 recipes, including 32 Filipino home-cooking dishes. Filter by cuisine and meal type, or search names, ingredients, and alternate spellings such as monggo/munggo.
 - Browse 12 recipes per page to keep the library manageable on a phone.
 - Open recipe details in a centered popup with approximate servings, ingredient checkboxes, and instructions. Longer recipes scroll inside the popup; Close, Escape, or clicking outside returns to browsing. Direct recipe URLs still work as standalone pages.
+- Use **Watch tutorial** in a recipe to open its YouTube video in a responsive popup. Closing it, pressing Escape, or clicking its backdrop removes the player and returns focus to the recipe. An **Open on YouTube** link is always available if embedding is unavailable. Video players load only after the button is clicked.
 - Save favorite recipes as a guest or choose a local profile with a name and avatar from the header picker.
 - Add recipes to a chosen day and breakfast, lunch, or dinner slot from the recipe cards, saved list, or detail page. Occupied slots show a replacement warning before confirmation.
 - Plan 21 meals per week with meal photos and controls to change or remove just one meal. Older dinner-only plans are preserved in the dinner slots.
@@ -44,6 +45,8 @@ The homepage is a short introduction. Each feature has a separate page: `recipes
 Suggestions cycle through matching recipes if there are fewer matches than empty meal slots. Grocery entries include breakfast, lunch, and dinner; they group identical ingredient descriptions and list each day and meal where they are needed. Different quantities and units are not combined. Amounts follow the original recipes, without serving-size adjustments. Plan migration and meal operations live in `js/meal-plan.js`; PNG drawing lives in `js/plan-export.js`.
 
 Food photos are illustrative serving suggestions and may include extra ingredients. Source links and licenses are recorded in `images/credits.json`. Servings are approximate yields of the existing recipes; changing portion sizes is not yet supported.
+
+Creator-provided video links for all 44 recipes live in `js/tutorials.js`, with video IDs, titles, creator attribution, reference URLs, and the metadata check date. Links were checked against YouTube's oEmbed endpoint on October 31, 2026. Videos are external demonstrations and may use different ingredients or quantities from the KitchenPath recipes; playback also depends on YouTube availability and creator embedding settings. The popup uses YouTube's privacy-enhanced embed domain.
 
 Filipino recipes live in `js/filipino-recipes.js` and load before the main application on every page. They are simplified home-cooking versions with approximate total times and yields; marinating, chilling, or cooling is noted where applicable. New recipes use the same saved lists, day picker, meal planner, and ingredient checklist as the original library.
 
