@@ -483,6 +483,7 @@
     return `<details class="ingredient-guide"><summary>${guide.brands ? "Brand options & tips" : "Seasoning tip"}</summary>${brands}<p>${esc(guide.tip)}</p></details>`;
   }
 
+  const groceryCheckKey = (slot, ingredient) => JSON.stringify([slot, ingredient]);
   function groceryItems(scope = $("#groceryDay")?.value || "week", mealSlot = null) {
     const items = new Map();
     DAYS.forEach((day) => {
@@ -493,7 +494,7 @@
         if (!recipe) return;
         recipe.ingredients.forEach((ingredient) => {
           const key = ingredient.trim().toLowerCase();
-          if (!items.has(key)) items.set(key, { key, label: ingredient, days: [] });
+          if (!items.has(key)) items.set(key, { key, checkKey: mealSlot ? groceryCheckKey(mealSlot, key) : null, label: ingredient, days: [] });
           items.get(key).days.push(`${day} (${slot})`);
         });
       });
@@ -503,8 +504,9 @@
 
   function renderGroceries() {
     const items = groceryItems();
-    const activeKeys = new Set(groceryItems("week").map((item) => item.key));
-    groceryChecks = new Set([...groceryChecks].filter((key) => activeKeys.has(key)));
+    // Preserve existing shared checks once, then store them separately per meal.
+    const activeItems = MEAL_SLOTS.flatMap(slot => groceryItems("week", slot));
+    groceryChecks = new Set(activeItems.filter(item => groceryChecks.has(item.checkKey) || groceryChecks.has(item.key)).map(item => item.checkKey));
     localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
     if (!$("#groceryList")) return;
     const scope = $("#groceryDay")?.value || "week";
@@ -513,12 +515,15 @@
     $("#groceryList").innerHTML = groups.map((group) => `
       <section class="grocery-meal-section" aria-labelledby="groceries-${group.slot}">
         <header class="grocery-meal-heading">
-          <h2 id="groceries-${group.slot}">${group.slot}</h2>
-          <p>${group.items.filter(item => groceryChecks.has(item.key)).length} of ${group.items.length} ingredient entries checked</p>
+          <h2 id="groceries-${group.slot}" tabindex="-1">${group.slot}</h2>
+          <div class="grocery-meal-controls">
+            <p>${group.items.filter(item => groceryChecks.has(item.checkKey)).length} of ${group.items.length} ingredient entries checked</p>
+            <button type="button" class="text-button" data-uncheck-meal="${group.slot}" aria-label="Uncheck all ${group.slot} ingredients" ${group.items.some(item => groceryChecks.has(item.checkKey)) ? "" : "disabled"}>Uncheck all</button>
+          </div>
         </header>
         ${group.items.length ? `<div class="grocery-meal-items">${group.items.map((item) => `
       <div class="grocery-entry"><label class="grocery-item">
-        <input type="checkbox" data-ingredient="${esc(item.key)}" ${groceryChecks.has(item.key) ? "checked" : ""}>
+        <input type="checkbox" data-ingredient="${esc(item.key)}" data-check-key="${esc(item.checkKey)}" ${groceryChecks.has(item.checkKey) ? "checked" : ""}>
         <span><strong>${esc(item.label)}</strong>
           <small>${item.days.length > 1 ? `Needed ${item.days.length} times · ` : ""}${esc(item.days.join(", "))}</small>
         </span>
@@ -534,7 +539,7 @@
       : `Add a meal for ${scope} in your meal plan, or select another day.`;
     $("#downloadGroceries").disabled = !items.length;
     $("#grocerySummary").textContent = items.length
-      ? `${scopeLabel}: ${displayedItems.filter((item) => groceryChecks.has(item.key)).length} of ${displayedItems.length} ingredient entries checked`
+      ? `${scopeLabel}: ${displayedItems.filter((item) => groceryChecks.has(item.checkKey)).length} of ${displayedItems.length} ingredient entries checked`
       : `${scopeLabel}: no meals planned.`;
   }
 
@@ -1264,21 +1269,33 @@
     list.addEventListener("change", (event) => {
       const input = event.target.closest("input[data-ingredient]");
       if (!input) return;
-      if (input.checked) groceryChecks.add(input.dataset.ingredient);
-      else groceryChecks.delete(input.dataset.ingredient);
+      const key = input.dataset.checkKey;
+      if (input.checked) groceryChecks.add(key);
+      else groceryChecks.delete(key);
       localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
       renderGroceries();
+      $$("input[data-check-key]", list).find(input => input.dataset.checkKey === key)?.focus({ preventScroll: true });
+    });
+
+    list.addEventListener("click", event => {
+      const button = event.target.closest("[data-uncheck-meal]");
+      const slot = button?.dataset.uncheckMeal;
+      if (!MEAL_SLOTS.includes(slot)) return;
+      groceryItems(daySelect.value, slot).forEach(item => groceryChecks.delete(item.checkKey));
+      localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
+      renderGroceries();
+      $(`#groceries-${slot}`).focus({ preventScroll: true });
     });
 
     $("#downloadGroceries").addEventListener("click", () => {
       const lines = MEAL_SLOTS.flatMap(slot => {
         const items = groceryItems(daySelect.value, slot);
         return [translate(slot), ...(items.length ? items.map(item =>
-          `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`)
+          `${groceryChecks.has(item.checkKey) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`)
           : [translate("No ingredients for this meal yet.")]), ""];
       });
       const scopeLabel = daySelect.value === "week" ? "Whole week" : daySelect.value;
-      const text = [translate(`KitchenPath grocery list — ${scopeLabel}`), translate("Amounts are per recipe use; adjust for portions and repeated meals."), translate("Matching ingredients share a check across meal sections."), "", ...lines].join("\n");
+      const text = [translate(`KitchenPath grocery list — ${scopeLabel}`), translate("Amounts are per recipe use; adjust for portions and repeated meals."), translate("Checks are separate for breakfast, lunch, and dinner."), "", ...lines].join("\n");
       const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
       const link = document.createElement("a");
       link.href = url;

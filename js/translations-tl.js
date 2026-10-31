@@ -7,6 +7,8 @@ Beginner|Baguhan
 All levels|Lahat ng antas
 Lunch/Dinner|Tanghalian/Hapunan
 Main ingredient|Pangunahing sangkap
+Uncheck all|Alisin lahat ng marka
+Checks are separate for breakfast, lunch, and dinner.|Magkahiwalay ang mga marka para sa almusal, tanghalian, at hapunan.
 All types|Lahat ng uri
 Meat|Karne
 Meat & Vegetables|Karne at Gulay

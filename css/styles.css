@@ -616,6 +616,8 @@ main { flex: 1; }
 .grocery-meal-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 14px; }
 .grocery-meal-heading h2 { font-size: 1.35rem; margin: 0; }
 .grocery-meal-heading p { margin: 0; font-size: .8rem; color: var(--text-soft); }
+.grocery-meal-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.grocery-meal-controls .text-button { min-height: 44px; font-size: .8rem; }
 .grocery-meal-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .grocery-meal-empty { font-size: .88rem; color: var(--text-soft); margin: 0; }
 @media (max-width: 780px) { .grocery-meal-items { grid-template-columns: minmax(0, 1fr); } }

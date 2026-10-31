@@ -166,6 +166,7 @@ The questions everyone is quietly wondering.|Mga tanong na karaniwan sa mga nags
     let result = messages.get(key);
     if (result === undefined) {
       const rules = [
+        [/^Uncheck all (Breakfast|Lunch|Dinner) ingredients$/, (_, slot) => `Alisin lahat ng marka sa mga sangkap para sa ${translate(slot, true)}`],
         [/^Amounts make about (\d+) servings?\.$/, (_, n) => `Sapat para sa humigit-kumulang ${n} tao.`],
         [/^(Lunch\/Dinner|Breakfast|Side|Snack|Dessert) · (Very easy|Easy|Medium)$/, (_, category, difficulty) => `${translate(category, true)} · ${translate(difficulty, true)}`],
         [/^(\d+) of (\d+) ingredient entries checked$/, (_, a, b) => `${a} sa ${b} sangkap ang namarkahan`],

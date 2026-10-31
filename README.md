@@ -40,6 +40,7 @@ The homepage is a short introduction. Each feature has a separate page: `recipes
 - Fill empty meal slots with suggestions based on time, difficulty, and an optional Filipino-only preference. Suggestions use the matching meal category and leave existing choices in place; unmatched slots remain empty with a status message.
 - Download the full or partially completed weekly plan as a standalone PNG picture, with translated labels, photos, cooking times, and photo attribution information. Image export is local to the browser and works without an external image service.
 - Generate a grocery checklist from the plan, check off ingredients, and download a text copy.
+- Breakfast, lunch, and dinner grocery sections have independent checks and their own **Uncheck all** button. Resetting a section clears only its displayed ingredients for the selected day or whole-week view; other meal sections retain their checks. Existing shared checks are migrated automatically.
 - Keep each profile's plan, dinner preferences, favorites, and grocery checks in separate browser storage. Switch profiles or return to Guest without losing another profile's data. The first profile copies the existing guest data; subsequent profiles start empty.
 - Switch between English and Tagalog from the header. The language choice is remembered across pages; saved recipes, plans, and ingredient checks are shared between languages. Search accepts English and Tagalog ingredient names.
 
