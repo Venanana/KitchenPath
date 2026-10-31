@@ -484,6 +484,17 @@
   }
 
   const groceryCheckKey = (slot, ingredient) => JSON.stringify([slot, ingredient]);
+  function groceryMeals(scope, slot) {
+    const meals = new Map();
+    DAYS.forEach(day => {
+      if (scope !== "week" && day !== scope) return;
+      const recipe = plannedRecipe(day, slot);
+      if (!recipe) return;
+      if (!meals.has(recipe.id)) meals.set(recipe.id, { recipe, days: [] });
+      meals.get(recipe.id).days.push(day);
+    });
+    return [...meals.values()];
+  }
   function groceryItems(scope = $("#groceryDay")?.value || "week", mealSlot = null) {
     const items = new Map();
     DAYS.forEach((day) => {
@@ -510,12 +521,16 @@
     localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
     if (!$("#groceryList")) return;
     const scope = $("#groceryDay")?.value || "week";
-    const groups = MEAL_SLOTS.map(slot => ({ slot, items: groceryItems(scope, slot) }));
+    const groups = MEAL_SLOTS.map(slot => ({ slot, items: groceryItems(scope, slot), meals: groceryMeals(scope, slot) }));
     const displayedItems = groups.flatMap(group => group.items);
     $("#groceryList").innerHTML = groups.map((group) => `
       <section class="grocery-meal-section" aria-labelledby="groceries-${group.slot}">
         <header class="grocery-meal-heading">
           <h2 id="groceries-${group.slot}" tabindex="-1">${group.slot}</h2>
+          <p class="grocery-cooking-label">What you're cooking</p>
+          ${group.meals.length ? `<ul class="grocery-planned-dishes">${group.meals.map(({ recipe, days }) => `
+            <li><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a>${scope === "week" ? `<small>${esc(days.join(", "))}</small>` : ""}</li>
+          `).join("")}</ul>` : '<p class="grocery-no-dish">No meal selected</p>'}
           <div class="grocery-meal-controls">
             <p>${group.items.filter(item => groceryChecks.has(item.checkKey)).length} of ${group.items.length} ingredient entries checked</p>
             <button type="button" class="text-button" data-uncheck-meal="${group.slot}" aria-label="Uncheck all ${group.slot} ingredients" ${group.items.some(item => groceryChecks.has(item.checkKey)) ? "" : "disabled"}>Uncheck all</button>
@@ -1290,7 +1305,9 @@
     $("#downloadGroceries").addEventListener("click", () => {
       const lines = MEAL_SLOTS.flatMap(slot => {
         const items = groceryItems(daySelect.value, slot);
-        return [translate(slot), ...(items.length ? items.map(item =>
+        const meals = groceryMeals(daySelect.value, slot);
+        const dishes = meals.map(({ recipe, days }) => `${translate(recipe.name)}${daySelect.value === "week" ? ` — ${translate(days.join(", "))}` : ""}`);
+        return [translate(slot), translate("What you're cooking"), ...(dishes.length ? dishes : [translate("No meal selected")]), "", ...(items.length ? items.map(item =>
           `${groceryChecks.has(item.checkKey) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`)
           : [translate("No ingredients for this meal yet.")]), ""];
       });
