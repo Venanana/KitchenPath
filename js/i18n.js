@@ -166,6 +166,7 @@ The questions everyone is quietly wondering.|Mga tanong na karaniwan sa mga nags
     let result = messages.get(key);
     if (result === undefined) {
       const rules = [
+        [/^(\d+) of (\d+) ingredient entries checked$/, (_, a, b) => `${a} sa ${b} sangkap ang namarkahan`],
         [/^(\d+) of 21 meals planned$/, (_, n) => `${n} sa 21 pagkain ang nakaplano`],
         [/^Added (\d+) meal suggestions\. You can change any meal\.$/, (_, n) => `Nagdagdag ng ${n} mungkahing pagkain. Maaari mong palitan ang anumang pagkain.`],
         [/^Added (\d+) meals\. (\d+) slots have no matching recipes\. Allow more time or change cuisine\.$/, (_, a, b) => `Nagdagdag ng ${a} pagkain. Walang tumugmang resipe para sa ${b} bakante. Dagdagan ang oras o palitan ang uri ng lutuin.`],

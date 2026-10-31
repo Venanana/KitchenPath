@@ -480,11 +480,12 @@
     return `<details class="ingredient-guide"><summary>${guide.brands ? "Brand options & tips" : "Seasoning tip"}</summary>${brands}<p>${esc(guide.tip)}</p></details>`;
   }
 
-  function groceryItems(scope = $("#groceryDay")?.value || "week") {
+  function groceryItems(scope = $("#groceryDay")?.value || "week", mealSlot = null) {
     const items = new Map();
     DAYS.forEach((day) => {
       if (scope !== "week" && scope !== day) return;
       MEAL_SLOTS.forEach((slot) => {
+        if (mealSlot && mealSlot !== slot) return;
         const recipe = plannedRecipe(day, slot);
         if (!recipe) return;
         recipe.ingredients.forEach((ingredient) => {
@@ -503,16 +504,26 @@
     groceryChecks = new Set([...groceryChecks].filter((key) => activeKeys.has(key)));
     localStorage.setItem(STORAGE_KEYS.groceries, JSON.stringify([...groceryChecks]));
     if (!$("#groceryList")) return;
-    $("#groceryList").innerHTML = items.map((item) => `
+    const scope = $("#groceryDay")?.value || "week";
+    const groups = MEAL_SLOTS.map(slot => ({ slot, items: groceryItems(scope, slot) }));
+    const displayedItems = groups.flatMap(group => group.items);
+    $("#groceryList").innerHTML = groups.map((group) => `
+      <section class="grocery-meal-section" aria-labelledby="groceries-${group.slot}">
+        <header class="grocery-meal-heading">
+          <h2 id="groceries-${group.slot}">${group.slot}</h2>
+          <p>${group.items.filter(item => groceryChecks.has(item.key)).length} of ${group.items.length} ingredient entries checked</p>
+        </header>
+        ${group.items.length ? `<div class="grocery-meal-items">${group.items.map((item) => `
       <div class="grocery-entry"><label class="grocery-item">
         <input type="checkbox" data-ingredient="${esc(item.key)}" ${groceryChecks.has(item.key) ? "checked" : ""}>
         <span><strong>${esc(item.label)}</strong>
           <small>${item.days.length > 1 ? `Needed ${item.days.length} times · ` : ""}${esc(item.days.join(", "))}</small>
         </span>
       </label>${ingredientGuide(item.label)}</div>
-    `).join("");
+    `).join("")}</div>` : '<p class="grocery-meal-empty">No ingredients for this meal yet.</p>'}
+      </section>`).join("");
+    $("#groceryList").hidden = !items.length;
     $("#groceryEmpty").hidden = items.length > 0;
-    const scope = $("#groceryDay")?.value || "week";
     const scopeLabel = scope === "week" ? "Whole week" : `${scope}'s meals`;
     $("#groceryEmpty h3").textContent = scope === "week" ? "No groceries yet" : `No meals planned for ${scope}`;
     $("#groceryEmpty p").textContent = scope === "week"
@@ -520,7 +531,7 @@
       : `Add a meal for ${scope} in your meal plan, or select another day.`;
     $("#downloadGroceries").disabled = !items.length;
     $("#grocerySummary").textContent = items.length
-      ? `${scopeLabel}: ${items.filter((item) => groceryChecks.has(item.key)).length} of ${items.length} ingredient entries checked`
+      ? `${scopeLabel}: ${displayedItems.filter((item) => groceryChecks.has(item.key)).length} of ${displayedItems.length} ingredient entries checked`
       : `${scopeLabel}: no meals planned.`;
   }
 
@@ -1162,10 +1173,14 @@
     });
 
     $("#downloadGroceries").addEventListener("click", () => {
-      const lines = groceryItems().map((item) =>
-        `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`);
+      const lines = MEAL_SLOTS.flatMap(slot => {
+        const items = groceryItems(daySelect.value, slot);
+        return [translate(slot), ...(items.length ? items.map(item =>
+          `${groceryChecks.has(item.key) ? "[x]" : "[ ]"} ${translate(item.label)} — ${translate(`${item.days.length} recipe use(s)`)}: ${translate(item.days.join(", "))}`)
+          : [translate("No ingredients for this meal yet.")]), ""];
+      });
       const scopeLabel = daySelect.value === "week" ? "Whole week" : daySelect.value;
-      const text = [translate(`KitchenPath grocery list — ${scopeLabel}`), translate("Amounts are per recipe use; adjust for portions and repeated meals."), "", ...lines].join("\n");
+      const text = [translate(`KitchenPath grocery list — ${scopeLabel}`), translate("Amounts are per recipe use; adjust for portions and repeated meals."), translate("Matching ingredients share a check across meal sections."), "", ...lines].join("\n");
       const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
       const link = document.createElement("a");
       link.href = url;

@@ -18,6 +18,9 @@ Could not create the image. Please try downloading again.|Hindi magawa ang laraw
 Breakfast, lunch & dinner|Almusal, tanghalian at hapunan
 Not planned|Walang plano
 Photo credits and licenses|Mga credit at lisensya ng larawan
+Breakfast, lunch, and dinner ingredients in separate sections. Choose a day or the whole week.|Magkahiwalay ang mga sangkap para sa almusal, tanghalian, at hapunan. Pumili ng araw o ng buong linggo.
+Matching ingredients share a check across meal sections.|Magkasama ang marka ng magkaparehong sangkap sa iba't ibang seksyon ng pagkain.
+No ingredients for this meal yet.|Wala pang sangkap para sa pagkaing ito.
 Keep this image on your phone or print it for your kitchen.|I-save ang larawang ito sa phone o i-print para sa kusina.
 No meal selected|Wala pang napiling pagkain
 Choose a meal|Pumili ng pagkain
