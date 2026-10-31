@@ -215,7 +215,7 @@
   };
   (window.KITCHENPATH_FILIPINO_RECIPES || []).forEach((recipe) => { SERVINGS[recipe.id] = recipe.servings; });
 
-  const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack", "Dessert"];
+  const CATEGORIES = ["All", "Breakfast", "Lunch/Dinner", "Side", "Snack", "Dessert"];
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const MEAL_SLOTS = ["Breakfast", "Lunch", "Dinner"];
   const STORAGE_KEYS = {
@@ -304,6 +304,9 @@
   }
 
   const recipeById = (id) => RECIPES.find((recipe) => recipe.id === id);
+  const recipeCategory = (recipe) => ["Lunch", "Dinner"].includes(recipe.category) ? "Lunch/Dinner" : recipe.category;
+  const recipeFoodType = (recipe) => window.KitchenPathRecipeTags?.groups[recipe.id] || "";
+  const recipeFoodLabel = (recipe) => window.KitchenPathRecipeTags?.labels[recipeFoodType(recipe)] || "";
   const recipeUrl = (recipe) => `recipe.html?id=${encodeURIComponent(recipe.id)}`;
   function recipePhoto(recipe, eager = false) {
     if (recipe.photo === null) return `<span class="food-photo" role="img" aria-label="${esc(recipe.name)}; photo unavailable"><span class="photo-fallback" aria-hidden="true">${recipe.icon}</span></span>`;
@@ -361,7 +364,7 @@
         <a class="saved-photo" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
         <div>
           <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>
-          <p>${recipe.time} min · ${esc(recipe.category)}</p>
+          <p>${recipe.time} min · ${esc(recipeCategory(recipe))}</p>
           <button type="button" class="text-button add-to-plan" data-id="${esc(recipe.id)}">Add to meal plan</button>
         </div>
         <button type="button" class="text-button remove-saved" data-id="${esc(recipe.id)}" aria-label="Remove ${esc(recipe.name)} from saved recipes">Remove</button>
@@ -798,19 +801,22 @@
       ${modal ? "" : '<a class="back-link" href="recipes.html">&larr; All recipes</a>'}
       <div class="recipe-detail-header">
         <figure>${recipePhoto(recipe, true)}<figcaption>${photoCaption(recipe)}</figcaption></figure>
-        <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipe.category)} · ${esc(recipe.difficulty)}</p>
+        <div class="recipe-detail-copy"><p class="recipe-category">${esc(recipeCategory(recipe))} · ${esc(recipe.difficulty)}</p>
           <${titleTag} id="${prefix}recipeTitle">${esc(recipe.name)}</${titleTag}><p>${esc(recipe.blurb)}</p>
+          <p class="recipe-food-tags"><span class="tag tag-food">${esc(recipeFoodLabel(recipe))}</span></p>
           <ul class="recipe-facts"><li><b>${recipe.time} min</b><span>Total time</span></li><li><b>${SERVINGS[recipe.id]}</b><span>Servings (approx.)</span></li></ul>
           ${recipe.timeNote ? `<p class="device-note">${esc(recipe.timeNote)}</p>` : ""}
           <div class="detail-actions"><button class="btn btn-primary add-to-plan" data-id="${esc(recipe.id)}" type="button">Add to meal plan</button>
           ${window.KITCHENPATH_TUTORIALS?.[recipe.id] ? `<button class="btn btn-ghost watch-tutorial" data-id="${esc(recipe.id)}" type="button">Watch tutorial</button>` : ""}
+          <button class="btn btn-ghost print-recipe" data-id="${esc(recipe.id)}" type="button">Print / Save PDF</button>
           <button class="save-recipe" data-id="${esc(recipe.id)}" type="button" aria-pressed="false">Save</button></div>
+          <p class="device-note recipe-print-note">Print this recipe or choose Save as PDF to keep it on your device.</p>
         </div>
       </div>
       <div class="recipe-cooking-layout">
         <section class="ingredient-section" aria-labelledby="${prefix}ingredientHeading"><${sectionTag} id="${prefix}ingredientHeading">Ingredients</${sectionTag}>
-          <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}. Check off ingredients as you prepare them.</p>
-          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><label><input type="checkbox"><span>${esc(ingredient)}</span></label>${ingredientGuide(ingredient)}</li>`).join("")}</ul>
+          <p class="device-note">Amounts make about ${SERVINGS[recipe.id]} serving${SERVINGS[recipe.id] === 1 ? "" : "s"}.</p>
+          <ul class="detail-ingredients">${recipe.ingredients.map((ingredient) => `<li><span class="ingredient-text">${esc(ingredient)}</span>${ingredientGuide(ingredient)}</li>`).join("")}</ul>
         </section>
         <section aria-labelledby="${prefix}methodHeading"><${sectionTag} id="${prefix}methodHeading">Instructions</${sectionTag}>
           <ol class="method-list">${recipe.steps.map((step) => `<li>${esc(step)}</li>`).join("")}</ol>
@@ -830,6 +836,42 @@
     }
     document.title = `${recipe.name} — KitchenPath`;
     renderRecipeDetail(detail, recipe);
+  })();
+
+  (function initRecipePrinting() {
+    const printout = document.createElement("article");
+    printout.id = "recipePrintout";
+    printout.className = "recipe-printout";
+    document.body.appendChild(printout);
+    function prepare() {
+      const source = $("#recipeDialog[open] .recipe-dialog-content") || $("#recipeDetail");
+      if (!source?.querySelector(".recipe-cooking-layout")) return false;
+      printout.replaceChildren();
+      const brand = document.createElement("p");
+      brand.className = "print-brand";
+      brand.textContent = "KitchenPath";
+      printout.appendChild(brand);
+      for (const selector of [".recipe-detail-header", ".recipe-cooking-layout"]) {
+        const copy = source.querySelector(selector).cloneNode(true);
+        copy.querySelectorAll(".detail-actions, .recipe-print-note, .ingredient-guide").forEach(el => el.remove());
+        copy.querySelectorAll("[id], [aria-labelledby]").forEach(el => {
+          el.removeAttribute("id"); el.removeAttribute("aria-labelledby");
+        });
+        printout.appendChild(copy);
+      }
+      document.body.classList.add("printing-recipe");
+      return true;
+    }
+    function cleanup() {
+      document.body.classList.remove("printing-recipe");
+      printout.replaceChildren();
+    }
+    window.addEventListener("beforeprint", prepare);
+    window.addEventListener("afterprint", cleanup);
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".print-recipe") || !prepare()) return;
+      try { window.print(); } catch { cleanup(); }
+    });
   })();
 
   (function initRecipePopup() {
@@ -936,6 +978,7 @@
     let currentPage = 1;
     const pageSize = 12;
     const cuisine = $("#recipeCuisine");
+    const foodType = $("#recipeFoodType");
 
     // Build filter chips.
     CATEGORIES.forEach((cat) => {
@@ -957,15 +1000,16 @@
     });
 
     function matches(recipe) {
-      const inCategory = activeCategory === "All" || recipe.category === activeCategory;
+      const inCategory = activeCategory === "All" || recipeCategory(recipe) === activeCategory;
       if (!inCategory) return false;
       if (cuisine?.value === "filipino" && recipe.cuisine !== "Filipino") return false;
+      if (foodType?.value && foodType.value !== "all" && recipeFoodType(recipe) !== foodType.value) return false;
       if (!query) return true;
 
-      const haystack = [recipe.name, recipe.category, recipe.cuisine || "", recipe.blurb, ...(recipe.aliases || []), ...recipe.ingredients]
+      const haystack = [recipe.name, recipe.category, recipeCategory(recipe), recipeFoodLabel(recipe), recipe.cuisine || "", recipe.blurb, ...(recipe.aliases || []), ...recipe.ingredients]
         .join(" ")
         .toLowerCase();
-      const localized = [recipe.name, recipe.category, recipe.blurb, ...recipe.ingredients]
+      const localized = [recipe.name, recipe.category, recipeCategory(recipe), recipeFoodLabel(recipe), recipe.blurb, ...recipe.ingredients]
         .map((text) => window.KitchenPathI18n?.translate(text, true) ?? text).join(" ").toLowerCase();
       return haystack.includes(query) || localized.includes(query);
     }
@@ -976,11 +1020,12 @@
           <a class="recipe-thumb" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
           <div class="recipe-body">
             <div class="recipe-meta">
-              <span class="tag">${esc(recipe.category)}</span>
+              <span class="tag">${esc(recipeCategory(recipe))}</span>
               <span class="tag tag-alt">${esc(recipe.difficulty)}</span>
               ${recipe.cuisine ? `<span class="tag tag-alt">${esc(recipe.cuisine)}</span>` : ""}
             </div>
             <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>
+            <p class="recipe-food-tags"><span class="tag tag-food">${esc(recipeFoodLabel(recipe))}</span></p>
             <p class="recipe-blurb">${esc(recipe.blurb)}</p>
 
             <ul class="recipe-facts">
@@ -1032,6 +1077,7 @@
     });
 
     cuisine?.addEventListener("change", () => { currentPage = 1; render(); });
+    foodType?.addEventListener("change", () => { currentPage = 1; render(); });
     function turnPage(change) {
       currentPage += change;
       render();

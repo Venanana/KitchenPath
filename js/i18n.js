@@ -166,6 +166,8 @@ The questions everyone is quietly wondering.|Mga tanong na karaniwan sa mga nags
     let result = messages.get(key);
     if (result === undefined) {
       const rules = [
+        [/^Amounts make about (\d+) servings?\.$/, (_, n) => `Sapat para sa humigit-kumulang ${n} tao.`],
+        [/^(Lunch\/Dinner|Breakfast|Side|Snack|Dessert) · (Very easy|Easy|Medium)$/, (_, category, difficulty) => `${translate(category, true)} · ${translate(difficulty, true)}`],
         [/^(\d+) of (\d+) ingredient entries checked$/, (_, a, b) => `${a} sa ${b} sangkap ang namarkahan`],
         [/^(\d+) of 21 meals planned$/, (_, n) => `${n} sa 21 pagkain ang nakaplano`],
         [/^Added (\d+) meal suggestions\. You can change any meal\.$/, (_, n) => `Nagdagdag ng ${n} mungkahing pagkain. Maaari mong palitan ang anumang pagkain.`],

@@ -5,6 +5,18 @@
 Search adobo, munggo, ingredients…|Maghanap ng adobo, munggo, o sangkap…
 Beginner|Baguhan
 All levels|Lahat ng antas
+Lunch/Dinner|Tanghalian/Hapunan
+Main ingredient|Pangunahing sangkap
+All types|Lahat ng uri
+Meat|Karne
+Meat & Vegetables|Karne at Gulay
+Vegetable-based|Gulay
+Seafood|Pagkaing-dagat
+Eggs & Dairy|Itlog at Gatas
+Rice & Pasta|Bigas at Pasta
+Sweets|Matatamis
+Print / Save PDF|I-print / I-save bilang PDF
+Print this recipe or choose Save as PDF to keep it on your device.|I-print ang resipe o piliin ang Save as PDF para maitabi ito sa iyong device.
 Plan breakfast, lunch, and dinner for every day. Save your week as a picture.|Planuhin ang almusal, tanghalian, at hapunan araw-araw. I-save ang plano ng linggo bilang larawan.
 Suggest meals|Magmungkahi ng pagkain
 Time per meal|Oras ng pagluluto bawat pagkain
