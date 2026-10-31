@@ -4,6 +4,19 @@
   const pairs = `KitchenPath — Learn to Cook, One Meal at a Time|KitchenPath — Matutong Magluto, Isang Pagkain sa Bawat Hakbang
 Search adobo, munggo, ingredients…|Maghanap ng adobo, munggo, o sangkap…
 Beginner|Baguhan
+Cooking skills, on video|Mga kasanayan sa pagluluto, sa video
+Choose a skill and watch a beginner tutorial.|Pumili ng kasanayan at manood ng gabay para sa baguhan.
+Videos play in their original language. Use the player's captions or subtitle settings when available.|Nasa orihinal na wika ang mga video. Gamitin ang captions o subtitle sa player kung mayroon.
+Practice a steady grip, safe finger positioning, and basic chopping.|Sanayin ang matatag na paghawak, ligtas na puwesto ng mga daliri, at simpleng paghiwa.
+Learn when to add salt and pepper and how to adjust the flavor.|Alamin kung kailan maglalagay ng asin at paminta at kung paano ayusin ang timpla.
+Cooking rice|Pagsasaing
+Watch a step-by-step method for fluffy rice.|Panoorin ang sunod-sunod na hakbang para sa buhaghag na kanin.
+Cooking pasta|Pagluluto ng pasta
+Learn how to boil, drain, and finish pasta with sauce.|Alamin kung paano pakuluan, salain, at haluan ng sarsa ang pasta.
+Using a food thermometer|Paggamit ng thermometer sa pagkain
+Learn how to check the internal temperature of cooked food.|Alamin kung paano sukatin ang temperatura sa loob ng nilulutong pagkain.
+Storing leftovers|Pagtatabi ng tirang pagkain
+Learn how to portion, label, and store leftovers to reduce waste.|Alamin kung paano hatiin, lagyan ng label, at itabi ang tirang pagkain para hindi masayang.
 All levels|Lahat ng antas
 Lunch/Dinner|Tanghalian/Hapunan
 Main ingredient|Pangunahing sangkap

@@ -326,6 +326,19 @@ main { flex: 1; }
 }
 .step h3 { margin-bottom: .35em; }
 .step p { color: var(--text-soft); font-size: .92rem; margin-bottom: 0; }
+.step { display: flex; flex-direction: column; align-items: flex-start; }
+.step .watch-tutorial { margin-top: auto; order: 1; }
+.step p { padding-bottom: 16px; }
+.basics-video-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px;
+}
+.basic-video-card {
+  padding: 22px; border: 1px solid var(--border); border-radius: 16px;
+  background: var(--surface); display: flex; flex-direction: column; align-items: flex-start;
+}
+.basic-video-card h3 { margin-bottom: .5em; }
+.basic-video-card p { color: var(--text-soft); font-size: .92rem; }
+.basic-video-card .watch-tutorial { margin-top: auto; }
 
 /* ---------- Recipes ---------- */
 

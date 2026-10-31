@@ -935,7 +935,7 @@
       <div class="tutorial-content"><h3 id="tutorialRecipe"></h3>
       <p class="tutorial-credit" id="tutorialCredit" translate="no"></p>
       <div class="tutorial-player" id="tutorialPlayer"></div>
-      <p class="device-note">This creator's version may use different ingredients or quantities. Follow the written recipe for your planned portions.</p>
+      <p class="device-note" id="tutorialNote"></p>
       <div class="tutorial-footer"><p>If the video will not play here, open it on YouTube.</p>
       <a class="btn btn-primary" id="tutorialYouTube" target="_blank" rel="noopener noreferrer">Open on YouTube</a></div></div>`;
     document.body.appendChild(dialog);
@@ -957,10 +957,14 @@
       const button = event.target.closest(".watch-tutorial");
       if (!button) return;
       const recipe = recipeById(button.dataset.id);
-      const tutorial = window.KITCHENPATH_TUTORIALS?.[recipe?.id];
+      const lesson = window.KITCHENPATH_BASICS_TUTORIALS?.[button.dataset.lesson];
+      const tutorial = lesson || window.KITCHENPATH_TUTORIALS?.[recipe?.id];
       if (!tutorial || !/^[A-Za-z0-9_-]{11}$/.test(tutorial.videoId)) return;
       opener = button;
-      $("#tutorialRecipe").textContent = recipe.name;
+      $("#tutorialRecipe").textContent = translate(lesson ? lesson.label : recipe.name);
+      $("#tutorialNote").textContent = translate(lesson
+        ? "Videos play in their original language. Use the player's captions or subtitle settings when available."
+        : "This creator's version may use different ingredients or quantities. Follow the written recipe for your planned portions.");
       $("#tutorialCredit").textContent = `${tutorial.title} · ${tutorial.creator}`;
       $("#tutorialYouTube").href = `https://www.youtube.com/watch?v=${tutorial.videoId}`;
       stop();
