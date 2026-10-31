@@ -166,6 +166,20 @@ The questions everyone is quietly wondering.|Mga tanong na karaniwan sa mga nags
     let result = messages.get(key);
     if (result === undefined) {
       const rules = [
+        [/^(\d+) of 21 meals planned$/, (_, n) => `${n} sa 21 pagkain ang nakaplano`],
+        [/^Added (\d+) meal suggestions\. You can change any meal\.$/, (_, n) => `Nagdagdag ng ${n} mungkahing pagkain. Maaari mong palitan ang anumang pagkain.`],
+        [/^Added (\d+) meals\. (\d+) slots have no matching recipes\. Allow more time or change cuisine\.$/, (_, a, b) => `Nagdagdag ng ${a} pagkain. Walang tumugmang resipe para sa ${b} bakante. Dagdagan ang oras o palitan ang uri ng lutuin.`],
+        [/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) \((Breakfast|Lunch|Dinner)\)$/, (_, day, slot) => `${translate(day, true)} (${translate(slot, true)})`],
+        [/^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) \((?:Breakfast|Lunch|Dinner)\)(?:, .+)+$/, () => key.split(", ").map(item => translate(item, true)).join(", ")],
+        [/^(Breakfast|Lunch|Dinner) — (.+)$/, (_, slot, day) => `${translate(slot, true)} — ${translate(day, true)}`],
+        [/^Remove (Breakfast|Lunch|Dinner) — (.+)$/, (_, slot, day) => `Alisin ang ${translate(slot, true)} — ${translate(day, true)}`],
+        [/^Change (Breakfast|Lunch|Dinner) — (.+)$/, (_, slot, day) => `Palitan ang ${translate(slot, true)} — ${translate(day, true)}`],
+        [/^(.+) added for (Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) \((Breakfast|Lunch|Dinner)\)\.$/, (_, recipe, day, slot) => `Idinagdag ang ${translate(recipe, true)} para sa ${translate(day, true)} (${translate(slot, true)}).`],
+        [/^(.+) \((Breakfast|Lunch|Dinner)\) removed\. Your grocery list has been updated\.$/, (_, day, slot) => `Inalis ang ${translate(slot, true)} sa ${translate(day, true)}. Na-update ang listahan ng bibilhin.`],
+        [/^(.+)'s meals$/, (_, day) => `Mga pagkain sa ${translate(day, true)}`],
+        [/^No meals planned for (.+)$/, (_, day) => `Walang nakaplanong pagkain sa ${translate(day, true)}`],
+        [/^(.+): no meals planned\.$/, (_, label) => `${translate(label, true)}: walang nakaplanong pagkain.`],
+        [/^Add a meal for (.+) in your meal plan, or select another day\.$/, (_, day) => `Magdagdag ng pagkain sa ${translate(day, true)} sa iyong plano, o pumili ng ibang araw.`],
         [/^KitchenPath — (.+)$/, (_, title) => `KitchenPath — ${translate(title, true)}`],
         [/^Recipe details — KitchenPath$/, () => "Detalye ng resipe — KitchenPath"],
         [/^Up to (\d+) minutes$/, (_, n) => `Hanggang ${n} minuto`],

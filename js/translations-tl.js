@@ -5,6 +5,30 @@
 Search adobo, munggo, ingredients…|Maghanap ng adobo, munggo, o sangkap…
 Beginner|Baguhan
 All levels|Lahat ng antas
+Plan breakfast, lunch, and dinner for every day. Save your week as a picture.|Planuhin ang almusal, tanghalian, at hapunan araw-araw. I-save ang plano ng linggo bilang larawan.
+Suggest meals|Magmungkahi ng pagkain
+Time per meal|Oras ng pagluluto bawat pagkain
+Filipino meals|Mga pagkaing Pinoy
+Suggestions fill empty meal slots, so your own choices stay in place.|Para lang sa mga bakanteng pagkain ang mga mungkahi; mananatili ang mga napili mo.
+Your plan saves automatically in this browser. Suggestions may repeat when only a few meals match.|Awtomatikong nase-save ang plano sa browser na ito. Maaaring maulit ang mungkahi kung kaunti lang ang tumugmang pagkain.
+Download plan (PNG)|I-download ang plano (PNG)
+Preparing your plan image…|Inihahanda ang larawan ng iyong plano…
+Your PNG is ready. Check your downloads.|Handa na ang PNG. Tingnan ang iyong mga download.
+Could not create the image. Please try downloading again.|Hindi magawa ang larawan. Subukang i-download muli.
+Breakfast, lunch & dinner|Almusal, tanghalian at hapunan
+Not planned|Walang plano
+Photo credits and licenses|Mga credit at lisensya ng larawan
+Keep this image on your phone or print it for your kitchen.|I-save ang larawang ito sa phone o i-print para sa kusina.
+No meal selected|Wala pang napiling pagkain
+Choose a meal|Pumili ng pagkain
+This meal slot is empty.|Wala pang nakaplanong pagkain dito.
+Add meal|Idagdag ang pagkain
+Replace meal|Palitan ang pagkain
+Your week is full. Remove a meal to get a new suggestion.|Puno na ang linggo. Alisin ang isang pagkain para makakuha ng bagong mungkahi.
+Week cleared. Choose a meal or suggest a fresh plan.|Nabura ang plano ng linggo. Pumili ng pagkain o humingi ng bagong mungkahi.
+See ingredients for one day's meals, or switch to the whole week.|Tingnan ang mga sangkap para sa isang araw o piliin ang buong linggo.
+Plan a meal to get started.|Magplano muna ng pagkain para makapagsimula.
+Choose your first meal and its ingredients will appear here.|Piliin ang unang pagkain at lilitaw rito ang mga sangkap nito.
 Choose a profile|Pumili ng profile
 On this browser|Sa browser na ito
 Guest|Bisita

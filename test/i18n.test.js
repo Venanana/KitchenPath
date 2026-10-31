@@ -16,7 +16,7 @@ function catalogue() {
     vm.runInContext(fs.readFileSync(path.join(root, "js", file), "utf8"), context);
   }
   const app = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
-  vm.runInContext(app.slice(app.indexOf("  const RECIPES ="), app.indexOf("  /* ----------------------------------------------------------------------\n     HELPERS")) +
+  vm.runInContext(app.slice(app.indexOf("  const RECIPES ="), app.indexOf("  const $ =")) +
     ";window.data = {recipes: RECIPES, hero: HERO_MEALS, glossary: GLOSSARY, faq: FAQS};", context);
   const { recipes, hero, glossary, faq } = context.window.data;
   const i18n = context.window.KitchenPathI18n;

@@ -74,19 +74,19 @@
       <div class="wrap">
         <header class="section-head">
           <h1>Weekly meal plan</h1>
-          <p>One dinner a day. Build your own week or let us give you a starting point.</p>
+          <p>Plan breakfast, lunch, and dinner for every day. Save your week as a picture.</p>
         </header>
         <div class="planner-workspace">
           <details class="planner-suggestions" id="plannerSuggestions">
             <summary id="plannerSuggestionsToggle">
               <span class="planner-suggestions-copy">
-                <strong>Suggest dinners</strong>
+                <strong>Suggest meals</strong>
                 <span class="planner-preference-summary"><span id="preferenceTime">Up to 60 minutes</span><span aria-hidden="true"> · </span><span id="preferenceDifficulty">Beginner</span><span aria-hidden="true"> · </span><span id="preferenceCuisine">Any cuisine</span></span>
               </span>
             </summary>
           <form id="plannerPreferences" class="planner-preferences">
-            <p class="device-note">Suggestions fill empty days, so your own choices stay in place.</p>
-            <label for="plannerTime">Time per dinner
+            <p class="device-note">Suggestions fill empty meal slots, so your own choices stay in place.</p>
+            <label for="plannerTime">Time per meal
               <select id="plannerTime" name="time">
                 <option value="15">Up to 15 minutes</option>
                 <option value="20">Up to 20 minutes</option>
@@ -103,18 +103,22 @@
               </select>
             </label>
             <label for="plannerCuisine">Cuisine
-              <select id="plannerCuisine"><option value="all">Any cuisine</option><option value="filipino">Filipino dinners</option></select>
+              <select id="plannerCuisine"><option value="all">Any cuisine</option><option value="filipino">Filipino meals</option></select>
             </label>
-            <button type="submit" class="btn btn-primary">Suggest dinners</button>
+            <button type="submit" class="btn btn-primary">Suggest meals</button>
           </form>
           </details>
           <div class="planner-toolbar">
-            <p id="plannerSummary" aria-live="polite">0 of 7 dinners planned</p>
-            <button id="clearPlan" class="text-button" type="button" disabled>Clear week</button>
+            <p id="plannerSummary" aria-live="polite">0 of 21 meals planned</p>
+            <div class="planner-toolbar-actions">
+              <button id="downloadPlan" class="btn btn-ghost btn-small" type="button" disabled>Download plan (PNG)</button>
+              <button id="clearPlan" class="text-button" type="button" disabled>Clear week</button>
+            </div>
           </div>
-        <div class="planner-grid" id="plannerGrid"></div>
           <p id="plannerStatus" class="planner-status" role="status"></p>
-          <p class="device-note">Your plan saves automatically in this browser. Suggestions may repeat when only a few dinners match.</p>
+          <p id="planDownloadStatus" class="planner-status" role="status"></p>
+        <div class="planner-grid" id="plannerGrid"></div>
+          <p class="device-note">Your plan saves automatically in this browser. Suggestions may repeat when only a few meals match.</p>
         <a class="btn btn-ghost planner-next" href="groceries.html">View grocery checklist →</a></div>
       </div>
     </section>
@@ -147,6 +151,8 @@
   <script src="js/recipes-tl.js"></script>
   <script src="js/translations-tl.js"></script>
   <script src="js/profiles.js"></script>
+  <script src="js/meal-plan.js"></script>
+  <script src="js/plan-export.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

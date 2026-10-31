@@ -217,6 +217,7 @@
 
   const CATEGORIES = ["All", "Breakfast", "Lunch", "Dinner", "Side", "Snack", "Dessert"];
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const MEAL_SLOTS = ["Breakfast", "Lunch", "Dinner"];
   const STORAGE_KEYS = {
     profile: "kitchenpath-profile",
     saved: "kitchenpath-saved-recipes",
@@ -322,8 +323,12 @@
   let profile = profileStore?.active() || readJSON(STORAGE_KEYS.profile, null);
   if (profileStore && !profileStore.active()) profile = null;
   let savedRecipes = new Set(readJSON(STORAGE_KEYS.saved, []));
-  let mealPlan = readJSON(STORAGE_KEYS.plan, {});
+  const readMealPlan = () => window.KitchenPathMealPlan.normalize(readJSON(STORAGE_KEYS.plan, {}));
+  let mealPlan = readMealPlan();
+  const plannedRecipe = (day, slot) => recipeById(mealPlan[day]?.[slot]);
+  const setPlannedMeal = (day, slot, id) => window.KitchenPathMealPlan.set(mealPlan, day, slot, id);
   let groceryChecks = new Set(readJSON(STORAGE_KEYS.groceries, []));
+  let downloadingPlan = false;
 
   function saveSavedRecipes() {
     localStorage.setItem(STORAGE_KEYS.saved, JSON.stringify([...savedRecipes]));
@@ -374,44 +379,41 @@
       `<option value="${esc(recipe.id)}">${esc(recipe.name)}</option>`
     ).join("");
 
-    grid.innerHTML = DAYS.map((day) => {
-      const recipe = recipeById(mealPlan[day]);
-      return `<article class="planner-day ${recipe ? "is-planned" : ""}">
-        <h2>${day}</h2>
-        ${recipe ? `<a class="planner-photo" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
-          <h3><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h3>`
-          : '<div class="planner-placeholder">No dinner selected</div>'}
-        <small class="planner-day-detail"></small>
-        <label class="planner-choice" ${recipe ? "hidden" : ""}>
-          <span>${recipe ? "Change dinner" : "Choose dinner"} for ${day}</span>
-          <select data-day="${day}" id="dinner-${day}">
-            <option value="">Choose a recipe</option>${options}
-          </select>
-        </label>
-        ${recipe ? `<div class="planner-day-actions">
-          <button type="button" class="text-button change-dinner" data-day="${day}" aria-controls="dinner-${day}" aria-expanded="false" aria-label="Change ${day}'s dinner">Change</button>
-          <button type="button" class="text-button remove-dinner" data-day="${day}" aria-label="Remove ${day}'s dinner">Remove</button>
-        </div>` : ""}
-      </article>`;
-    }).join("");
-
+    grid.innerHTML = DAYS.map((day) => `<article class="planner-day">
+      <h2>${day}</h2>
+      <div class="planner-meals">${MEAL_SLOTS.map((slot) => {
+        const recipe = plannedRecipe(day, slot);
+        const id = `meal-${day}-${slot}`;
+        return `<section class="planner-meal ${recipe ? "is-planned" : ""}">
+          <h3 class="meal-slot">${slot}</h3>
+          ${recipe ? `<a class="planner-photo" href="${recipeUrl(recipe)}" aria-label="View ${esc(recipe.name)}">${recipePhoto(recipe)}</a>
+            <h4><a href="${recipeUrl(recipe)}">${esc(recipe.name)}</a></h4>
+            <small class="planner-day-detail">${recipe.time} min · ${esc(recipe.difficulty)}</small>`
+            : '<p class="meal-empty">No meal selected</p>'}
+          <label class="planner-choice" ${recipe ? "hidden" : ""}>
+            <span class="sr-only">${slot} — ${day}</span>
+            <select data-day="${day}" data-slot="${slot}" id="${id}">
+              <option value="">Choose a recipe</option>${options}
+            </select>
+          </label>
+          ${recipe ? `<div class="planner-day-actions">
+            <button type="button" class="text-button change-meal" data-day="${day}" data-slot="${slot}" aria-controls="${id}" aria-expanded="false" aria-label="Change ${slot} — ${day}">Change</button>
+            <button type="button" class="text-button remove-meal" data-day="${day}" data-slot="${slot}" aria-label="Remove ${slot} — ${day}">Remove</button>
+          </div>` : ""}
+        </section>`;
+      }).join("")}</div></article>`).join("");
     $$("select", grid).forEach((select) => {
-      select.value = mealPlan[select.dataset.day] || "";
+      select.value = mealPlan[select.dataset.day]?.[select.dataset.slot] || "";
     });
     renderPlanSummary();
   }
 
   function renderPlanSummary() {
     if (!$("#plannerSummary")) return;
-    const planned = DAYS.map((day) => recipeById(mealPlan[day])).filter(Boolean);
-    $("#plannerSummary").textContent = `${planned.length} of 7 dinners planned`;
+    const planned = DAYS.flatMap(day => MEAL_SLOTS.map(slot => plannedRecipe(day, slot))).filter(Boolean);
+    $("#plannerSummary").textContent = `${planned.length} of 21 meals planned`;
     $("#clearPlan").disabled = !planned.length;
-    $$(".planner-day").forEach((card) => {
-      const recipe = recipeById(mealPlan[$("select", card).dataset.day]);
-      card.classList.toggle("is-planned", Boolean(recipe));
-      $(".planner-day-detail", card).textContent = recipe
-        ? `${recipe.time} min · ${recipe.difficulty}` : "No dinner selected.";
-    });
+    if ($("#downloadPlan")) $("#downloadPlan").disabled = downloadingPlan || !planned.length;
   }
 
   // Product examples are alternatives: choose one, then use the recipe quantity.
@@ -482,12 +484,14 @@
     const items = new Map();
     DAYS.forEach((day) => {
       if (scope !== "week" && scope !== day) return;
-      const recipe = recipeById(mealPlan[day]);
-      if (!recipe) return;
-      recipe.ingredients.forEach((ingredient) => {
-        const key = ingredient.trim().toLowerCase();
-        if (!items.has(key)) items.set(key, { key, label: ingredient, days: [] });
-        items.get(key).days.push(day);
+      MEAL_SLOTS.forEach((slot) => {
+        const recipe = plannedRecipe(day, slot);
+        if (!recipe) return;
+        recipe.ingredients.forEach((ingredient) => {
+          const key = ingredient.trim().toLowerCase();
+          if (!items.has(key)) items.set(key, { key, label: ingredient, days: [] });
+          items.get(key).days.push(`${day} (${slot})`);
+        });
       });
     });
     return [...items.values()].sort((a, b) => a.label.localeCompare(b.label));
@@ -509,15 +513,15 @@
     `).join("");
     $("#groceryEmpty").hidden = items.length > 0;
     const scope = $("#groceryDay")?.value || "week";
-    const scopeLabel = scope === "week" ? "Whole week" : `${scope}'s dinner`;
-    $("#groceryEmpty h3").textContent = scope === "week" ? "No groceries yet" : `No dinner planned for ${scope}`;
+    const scopeLabel = scope === "week" ? "Whole week" : `${scope}'s meals`;
+    $("#groceryEmpty h3").textContent = scope === "week" ? "No groceries yet" : `No meals planned for ${scope}`;
     $("#groceryEmpty p").textContent = scope === "week"
-      ? "Choose your first dinner and its ingredients will appear here."
-      : `Add a dinner for ${scope} in your meal plan, or select another day.`;
+      ? "Choose your first meal and its ingredients will appear here."
+      : `Add a meal for ${scope} in your meal plan, or select another day.`;
     $("#downloadGroceries").disabled = !items.length;
     $("#grocerySummary").textContent = items.length
       ? `${scopeLabel}: ${items.filter((item) => groceryChecks.has(item.key)).length} of ${items.length} ingredient entries checked`
-      : `${scopeLabel}: no dinner planned.`;
+      : `${scopeLabel}: no meals planned.`;
   }
 
   /* ----------------------------------------------------------------------
@@ -717,33 +721,38 @@
       <p id="planRecipeName"></p>
       <label for="planDay">Choose a day</label>
       <select id="planDay" name="day">${DAYS.map((day) => `<option value="${day}">${day}</option>`).join("")}</select>
+      <label for="planSlot">Choose a meal</label>
+      <select id="planSlot" name="slot">${MEAL_SLOTS.map(slot => `<option value="${slot}">${slot}</option>`).join("")}</select>
       <p id="planReplacement" role="status"></p>
       <div class="dialog-actions"><button type="button" class="btn btn-ghost" id="cancelPlan">Cancel</button>
-      <button type="submit" class="btn btn-primary" id="confirmPlan">Add dinner</button></div>
+      <button type="submit" class="btn btn-primary" id="confirmPlan">Add meal</button></div>
     </form>`;
     document.body.appendChild(dialog);
     let selectedRecipe;
     let opener;
     function syncReplacement() {
-      const current = recipeById(mealPlan[$("#planDay").value]);
+      const current = plannedRecipe($("#planDay").value, $("#planSlot").value);
       $("#planReplacement").textContent = current
         ? `Currently planned: ${current.name}. ${current.id === selectedRecipe.id ? "This meal is already selected." : "Adding this recipe will replace it."}`
-        : "This day has no dinner planned.";
-      $("#confirmPlan").textContent = current && current.id !== selectedRecipe.id ? "Replace dinner" : "Add dinner";
+        : "This meal slot is empty.";
+      $("#confirmPlan").textContent = current && current.id !== selectedRecipe.id ? "Replace meal" : "Add meal";
       $("#confirmPlan").disabled = current?.id === selectedRecipe.id;
     }
     $("#planDay").addEventListener("change", syncReplacement);
+    $("#planSlot").addEventListener("change", syncReplacement);
     $("#cancelPlan").addEventListener("click", () => dialog.close());
     dialog.addEventListener("close", () => opener?.focus());
     $("#addPlanForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const day = $("#planDay").value;
       if (!selectedRecipe || !DAYS.includes(day)) return;
-      mealPlan[day] = selectedRecipe.id;
+      const slot = $("#planSlot").value;
+      if (!MEAL_SLOTS.includes(slot)) return;
+      setPlannedMeal(day, slot, selectedRecipe.id);
       saveMealPlan();
       renderPlanner();
       dialog.close();
-      announce(`${selectedRecipe.name} added for ${day}.`, "planner.html", "View meal plan");
+      announce(`${selectedRecipe.name} added for ${day} (${slot}).`, "planner.html", "View meal plan");
     });
     document.addEventListener("click", (event) => {
       const save = event.target.closest(".save-recipe");
@@ -761,9 +770,10 @@
       selectedRecipe = recipeById(add.dataset.id);
       if (!selectedRecipe) return;
       opener = add;
-      mealPlan = readJSON(STORAGE_KEYS.plan, {});
+      mealPlan = readMealPlan();
+      $("#planSlot").value = MEAL_SLOTS.includes(selectedRecipe.category) ? selectedRecipe.category : "Dinner";
       $("#planRecipeName").textContent = selectedRecipe.name;
-      $("#planDay").value = DAYS.find((day) => !recipeById(mealPlan[day])) || DAYS[0];
+      $("#planDay").value = DAYS.find((day) => !plannedRecipe(day, $("#planSlot").value)) || DAYS[0];
       syncReplacement();
       dialog.showModal();
     });
@@ -1004,35 +1014,72 @@
     grid.addEventListener("change", (e) => {
       const select = e.target.closest("select");
       if (!select) return;
-      if (select.value) {
-        mealPlan[select.dataset.day] = select.value;
-      } else {
-        delete mealPlan[select.dataset.day];
-      }
-      const day = select.dataset.day;
+      const { day, slot } = select.dataset;
+      setPlannedMeal(day, slot, select.value);
       saveMealPlan();
       renderPlanner();
-      const focusTarget = $(`.change-dinner[data-day="${day}"]`) || $(`#dinner-${day}`);
+      const focusTarget = $(`.change-meal[data-day="${day}"][data-slot="${slot}"]`) || $(`#meal-${day}-${slot}`);
       focusTarget?.focus();
       $("#plannerStatus").textContent = "Plan updated. Open Groceries to see your checklist.";
     });
 
+    $("#downloadPlan").addEventListener("click", async () => {
+      if (downloadingPlan) return;
+      downloadingPlan = true;
+      renderPlanSummary();
+      const status = $("#planDownloadStatus");
+      status.textContent = "Preparing your plan image…";
+      try {
+        const rows = DAYS.map(day => ({
+          label: translate(day),
+          meals: MEAL_SLOTS.map(slot => {
+            const recipe = plannedRecipe(day, slot);
+            return recipe ? {
+              name: translate(recipe.name),
+              meta: translate(`${recipe.time} min`),
+              photo: recipe.photo === null ? null : `images/recipes/${recipe.id}.jpg`
+            } : null;
+          })
+        }));
+        const plannedCount = rows.flatMap(row => row.meals).filter(Boolean).length;
+        const blob = await window.KitchenPathPlanExport.render({
+          title: translate("Weekly meal plan"),
+          subtitle: `${translate("Breakfast, lunch & dinner")} · ${plannedCount}/21`,
+          columns: MEAL_SLOTS.map(slot => translate(slot)), rows,
+          emptyLabel: translate("Not planned"),
+          footer: translate("Keep this image on your phone or print it for your kitchen."),
+          creditsFooter: `${translate("Photo credits and licenses")}: kitchenpath.onrender.com/images/credits.json`
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url; link.download = "kitchenpath-weekly-meal-plan.png";
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+        status.textContent = "Your PNG is ready. Check your downloads.";
+      } catch {
+        status.textContent = "Could not create the image. Please try downloading again.";
+      } finally {
+        downloadingPlan = false;
+        renderPlanSummary();
+      }
+    });
+
     grid.addEventListener("click", (event) => {
-      const change = event.target.closest(".change-dinner");
+      const change = event.target.closest(".change-meal");
       if (change) {
-        const choice = change.closest(".planner-day").querySelector(".planner-choice");
+        const choice = change.closest(".planner-meal").querySelector(".planner-choice");
         choice.hidden = !choice.hidden;
         change.setAttribute("aria-expanded", String(!choice.hidden));
         if (!choice.hidden) $("select", choice).focus();
       }
-      const remove = event.target.closest(".remove-dinner");
+      const remove = event.target.closest(".remove-meal");
       if (!remove) return;
-      const day = remove.dataset.day;
-      delete mealPlan[day];
+      const { day, slot } = remove.dataset;
+      setPlannedMeal(day, slot, null);
       saveMealPlan();
       renderPlanner();
-      $(`#dinner-${day}`).focus();
-      $("#plannerStatus").textContent = `${day}'s dinner removed. Your grocery list has been updated.`;
+      $(`#meal-${day}-${slot}`).focus();
+      $("#plannerStatus").textContent = `${day} (${slot}) removed. Your grocery list has been updated.`;
     });
 
     const preferences = readJSON(STORAGE_KEYS.preferences, {});
@@ -1055,27 +1102,33 @@
       const difficulty = $("#plannerDifficulty").value;
       const cuisine = $("#plannerCuisine").value;
       localStorage.setItem(STORAGE_KEYS.preferences, JSON.stringify({ time, difficulty, cuisine }));
-      const candidates = RECIPES.filter((recipe) => recipe.category === "Dinner"
-        && (cuisine !== "filipino" || recipe.cuisine === "Filipino")
-        && recipe.time <= time && (difficulty === "all" || recipe.difficulty !== "Medium"));
-      const emptyDays = DAYS.filter((day) => !recipeById(mealPlan[day]));
-      if (!emptyDays.length) {
-        $("#plannerStatus").textContent = "Your week is full. Remove a dinner to get a new suggestion for that day.";
+      const emptySlots = window.KitchenPathMealPlan.entries(mealPlan).filter(({ day, slot }) => !plannedRecipe(day, slot));
+      if (!emptySlots.length) {
+        $("#plannerStatus").textContent = "Your week is full. Remove a meal to get a new suggestion.";
         return;
       }
-      if (!candidates.length) {
-        $("#plannerStatus").textContent = "No dinners match yet. Try allowing more cooking time.";
-        return;
+      let added = 0;
+      for (const slot of MEAL_SLOTS) {
+        const candidates = RECIPES.filter(recipe => recipe.category === slot
+          && (cuisine !== "filipino" || recipe.cuisine === "Filipino")
+          && recipe.time <= time && (difficulty === "all" || recipe.difficulty !== "Medium"));
+        for (let i = candidates.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+        }
+        if (!candidates.length) continue;
+        emptySlots.filter(entry => entry.slot === slot).forEach(({ day }, index) => {
+          setPlannedMeal(day, slot, candidates[index % candidates.length].id);
+          added++;
+        });
       }
-      // Shuffle a copy, then cycle through matches to spread variety across the week.
-      for (let i = candidates.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-      }
-      emptyDays.forEach((day, i) => { mealPlan[day] = candidates[i % candidates.length].id; });
       renderPlanner();
       saveMealPlan();
-      $("#plannerStatus").textContent = `Added ${emptyDays.length} dinner suggestions. Swap any meal using its dropdown.`;
+      if (added < emptySlots.length) {
+        $("#plannerStatus").textContent = `Added ${added} meals. ${emptySlots.length - added} slots have no matching recipes. Allow more time or change cuisine.`;
+        return;
+      }
+      $("#plannerStatus").textContent = `Added ${added} meal suggestions. You can change any meal.`;
       $("#plannerSuggestions").open = false;
       $("#plannerSuggestionsToggle").focus({ preventScroll: true });
     });
@@ -1084,7 +1137,7 @@
       mealPlan = {};
       renderPlanner();
       saveMealPlan();
-      $("#plannerStatus").textContent = "Week cleared. Choose a dinner or suggest a fresh plan.";
+      $("#plannerStatus").textContent = "Week cleared. Choose a meal or suggest a fresh plan.";
     });
 
     renderPlanner();

@@ -33,14 +33,15 @@ The homepage is a short introduction. Each feature has a separate page: `recipes
 - Browse 12 recipes per page to keep the library manageable on a phone.
 - Open recipe details in a centered popup with approximate servings, ingredient checkboxes, and instructions. Longer recipes scroll inside the popup; Close, Escape, or clicking outside returns to browsing. Direct recipe URLs still work as standalone pages.
 - Save favorite recipes as a guest or choose a local profile with a name and avatar from the header picker.
-- Add recipes to a chosen day from the recipe cards, saved list, or detail page. Occupied days show a replacement warning before confirmation.
-- View meal photos in the planner, change a dinner, or remove one day at a time.
-- Choose one dinner per day, or fill empty days with suggestions based on time, difficulty, and an optional Filipino-only preference. Longer cooking-time options include slow-simmered dishes.
+- Add recipes to a chosen day and breakfast, lunch, or dinner slot from the recipe cards, saved list, or detail page. Occupied slots show a replacement warning before confirmation.
+- Plan 21 meals per week with meal photos and controls to change or remove just one meal. Older dinner-only plans are preserved in the dinner slots.
+- Fill empty meal slots with suggestions based on time, difficulty, and an optional Filipino-only preference. Suggestions use the matching meal category and leave existing choices in place; unmatched slots remain empty with a status message.
+- Download the full or partially completed weekly plan as a standalone PNG picture, with translated labels, photos, cooking times, and photo attribution information. Image export is local to the browser and works without an external image service.
 - Generate a grocery checklist from the plan, check off ingredients, and download a text copy.
 - Keep each profile's plan, dinner preferences, favorites, and grocery checks in separate browser storage. Switch profiles or return to Guest without losing another profile's data. The first profile copies the existing guest data; subsequent profiles start empty.
 - Switch between English and Tagalog from the header. The language choice is remembered across pages; saved recipes, plans, and ingredient checks are shared between languages. Search accepts English and Tagalog ingredient names.
 
-Dinner suggestions currently use the sample recipes in the Dinner category. They cycle through matching recipes if there are fewer matches than empty days. Grocery entries group identical ingredient descriptions and list every day they are needed; different quantities and units are not combined. Amounts follow the original recipes, without serving-size adjustments.
+Suggestions cycle through matching recipes if there are fewer matches than empty meal slots. Grocery entries include breakfast, lunch, and dinner; they group identical ingredient descriptions and list each day and meal where they are needed. Different quantities and units are not combined. Amounts follow the original recipes, without serving-size adjustments. Plan migration and meal operations live in `js/meal-plan.js`; PNG drawing lives in `js/plan-export.js`.
 
 Food photos are illustrative serving suggestions and may include extra ingredients. Source links and licenses are recorded in `images/credits.json`. Servings are approximate yields of the existing recipes; changing portion sizes is not yet supported.
 

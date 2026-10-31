@@ -920,3 +920,29 @@ body.recipe-modal-open { overflow: hidden; }
 
 /* Keep the profile picker within the viewport at tablet widths as well. */
 .auth-panel { right: 0; }
+
+/* A week of breakfast, lunch and dinner, grouped clearly by day. */
+.planner-grid { grid-template-columns: minmax(0, 1fr); }
+.planner-day { padding: 18px; }
+.planner-day > h2 { font-size: 1.05rem; color: var(--accent); }
+.planner-meals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.planner-meal { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 8px; }
+.planner-meal .meal-slot { font: 600 .78rem var(--font-body); color: var(--text-soft); }
+.planner-meal h4 { font-size: 1rem; margin: 0; line-height: 1.45; overflow-wrap: anywhere; }
+.planner-meal h4 a { color: var(--text); }
+.planner-meal .planner-photo { height: 120px; flex-shrink: 0; }
+.planner-meal .planner-choice, .planner-meal .planner-day-actions { margin-top: auto; }
+.meal-empty { font-size: .85rem; color: var(--text-soft); margin: 0; }
+.planner-toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.plan-dialog #planDay { margin-bottom: 16px; }
+.planner-grid + .device-note { margin-top: 18px; }
+.planner-status:not(:empty) { margin-bottom: 18px; }
+@media (max-width: 680px) {
+  .planner-meals { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .planner-meal { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: start; gap: 8px 12px; padding: 12px; }
+  .planner-meal .meal-slot { grid-column: 1 / -1; }
+  .planner-meal .planner-photo { height: 70px; grid-column: 1; grid-row: 2 / 4; }
+  .planner-meal h4, .planner-meal .planner-day-detail { grid-column: 2; }
+  .planner-meal .planner-choice, .planner-meal .planner-day-actions, .planner-meal .meal-empty { grid-column: 1 / -1; }
+  .planner-day { padding: 12px; }
+}
